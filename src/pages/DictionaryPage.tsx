@@ -17,7 +17,14 @@ function ResultCard({ entry }: { entry: DictionaryResult }) {
     <div className="bg-white border border-slate-200 rounded-xl p-5 hover:border-slate-300 hover:shadow-sm transition">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-2xl font-bold text-slate-900 leading-none">{entry.word}</p>
+          <div className="flex items-center gap-2">
+            <p className="text-2xl font-bold text-slate-900 leading-none">{entry.word}</p>
+            {entry.commonWord && (
+              <span className="text-xs font-medium bg-green-50 text-green-600 px-2 py-0.5 rounded-full">
+                common
+              </span>
+            )}
+          </div>
           {entry.reading && (
             <p className="text-sm text-slate-400 mt-1">{entry.reading}</p>
           )}
@@ -25,7 +32,11 @@ function ResultCard({ entry }: { entry: DictionaryResult }) {
         <JlptBadge level={entry.jlptLevel} />
       </div>
 
-      <p className="text-slate-700 mt-3">{entry.meanings.join("; ")}</p>
+      <ol className="text-slate-700 mt-3 space-y-0.5 list-decimal list-inside">
+        {entry.meanings.slice(0, 6).map((m, i) => (
+          <li key={i}>{m}</li>
+        ))}
+      </ol>
 
       <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-slate-400">
         {entry.partOfSpeech && <span>{entry.partOfSpeech}</span>}
