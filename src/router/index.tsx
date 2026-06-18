@@ -8,6 +8,7 @@ import { RegisterPage } from "@/pages/RegisterPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { DeckDetailPage } from "@/pages/DeckDetailPage";
 import { ReviewPage } from "@/pages/ReviewPage";
+import { DictionaryPage } from "@/pages/DictionaryPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 
 export const router = createBrowserRouter([
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
           { path: ROUTES.DASHBOARD, element: <DashboardPage /> },
           { path: "/decks/:deckId", element: <DeckDetailPage /> },
           { path: ROUTES.REVIEW, element: <ReviewPage /> },
+          { path: ROUTES.DICTIONARY, element: <DictionaryPage /> },
         ],
       },
     ],

@@ -27,6 +27,9 @@ export function AppLayout() {
               <Link to={ROUTES.REVIEW} className="text-slate-600 hover:text-slate-900">
                 Review
               </Link>
+              <Link to={ROUTES.DICTIONARY} className="text-slate-600 hover:text-slate-900">
+                Dictionary
+              </Link>
             </nav>
           </div>
           <div className="flex items-center gap-3 text-sm">
