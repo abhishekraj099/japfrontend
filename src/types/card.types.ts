@@ -51,4 +51,5 @@ export interface UpdateCardInput {
   sourceType?: string;
   sourceUrl?: string;
   contextSentence?: string;
+  examples?: string[];
 }

@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cardSchema, type CardSchema } from "../schemas/card.schema";
 import { useUpdateCard } from "../hooks/useCards";
-import type { Card } from "@/types/card.types";
+import type { Card, UpdateCardInput } from "@/types/card.types";
 
 interface Props {
   card: Card;
@@ -15,8 +15,18 @@ function parseTags(raw: string | undefined): string[] {
   return raw.split(",").map((t) => t.trim()).filter(Boolean);
 }
 
+/** Grammar examples are edited one-per-line in a textarea. */
+function parseLines(raw: string | undefined): string[] {
+  if (!raw?.trim()) return [];
+  return raw.split("\n").map((l) => l.trim()).filter(Boolean);
+}
+
+const inputCls =
+  "w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition";
+
 export function EditCardForm({ card, deckId, onClose }: Props) {
   const { mutate: updateCard, isPending, error } = useUpdateCard(deckId, onClose);
+  const isGrammar = card.cardType === "grammar";
 
   const {
     register,
@@ -31,6 +41,7 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
       jlptLevel: card.jlptLevel ?? "",
       contextSentence: card.contextSentence ?? "",
       grammarNotes: card.grammarNotes ?? "",
+      examples: card.examples.join("\n"),
       tags: card.tags.join(", "),
     },
   });
@@ -41,18 +52,26 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
     : null;
 
   const onSubmit = (data: CardSchema) => {
-    updateCard({
-      id: card.id,
-      data: {
-        question: data.question,
-        answer: data.answer,
-        tags: parseTags(data.tags),
-        reading: data.reading || undefined,
-        jlptLevel: data.jlptLevel ? data.jlptLevel : undefined,
-        contextSentence: data.contextSentence || undefined,
-        grammarNotes: data.grammarNotes || undefined,
-      },
-    });
+    // Build a partial update. Fields not included are left untouched by the
+    // backend — this is what preserves patternId, cardType, review history and
+    // FSRS scheduling across an edit.
+    const payload: UpdateCardInput = {
+      question: data.question,
+      answer: data.answer,
+      tags: parseTags(data.tags),
+      jlptLevel: data.jlptLevel ? data.jlptLevel : undefined,
+      grammarNotes: data.grammarNotes || undefined,
+    };
+
+    if (isGrammar) {
+      payload.examples = parseLines(data.examples);
+    } else {
+      // Vocabulary-only fields — unchanged behaviour.
+      payload.reading = data.reading || undefined;
+      payload.contextSentence = data.contextSentence || undefined;
+    }
+
+    updateCard({ id: card.id, data: payload });
   };
 
   return (
@@ -65,12 +84,12 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
 
       <div className="space-y-1">
         <label className="text-sm font-medium text-slate-700" htmlFor="edit-question">
-          Question <span className="text-red-500">*</span>
+          {isGrammar ? "Pattern" : "Question"} <span className="text-red-500">*</span>
         </label>
         <textarea
           id="edit-question"
           rows={2}
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition resize-none"
+          className={`${inputCls} resize-none`}
           {...register("question")}
         />
         {errors.question && (
@@ -80,12 +99,12 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
 
       <div className="space-y-1">
         <label className="text-sm font-medium text-slate-700" htmlFor="edit-answer">
-          Answer <span className="text-red-500">*</span>
+          {isGrammar ? "Explanation" : "Answer"} <span className="text-red-500">*</span>
         </label>
         <textarea
           id="edit-answer"
           rows={2}
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition resize-none"
+          className={`${inputCls} resize-none`}
           {...register("answer")}
         />
         {errors.answer && (
@@ -93,25 +112,22 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="edit-reading">
-            Reading <span className="text-slate-400 font-normal">(furigana)</span>
-          </label>
-          <input
-            id="edit-reading"
-            type="text"
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
-            {...register("reading")}
-          />
-        </div>
+      <div className={isGrammar ? "" : "grid grid-cols-2 gap-3"}>
+        {!isGrammar && (
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-slate-700" htmlFor="edit-reading">
+              Reading <span className="text-slate-400 font-normal">(furigana)</span>
+            </label>
+            <input id="edit-reading" type="text" className={inputCls} {...register("reading")} />
+          </div>
+        )}
         <div className="space-y-1">
           <label className="text-sm font-medium text-slate-700" htmlFor="edit-jlptLevel">
             JLPT Level
           </label>
           <select
             id="edit-jlptLevel"
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition bg-white"
+            className={`${inputCls} bg-white`}
             {...register("jlptLevel")}
           >
             <option value="">—</option>
@@ -125,40 +141,51 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="edit-contextSentence">
-          Example sentence
-        </label>
-        <textarea
-          id="edit-contextSentence"
-          rows={2}
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition resize-none"
-          {...register("contextSentence")}
-        />
-      </div>
-
-      <div className="space-y-1">
         <label className="text-sm font-medium text-slate-700" htmlFor="edit-grammarNotes">
           Grammar notes
         </label>
         <textarea
           id="edit-grammarNotes"
           rows={2}
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition resize-none"
+          className={`${inputCls} resize-none`}
           {...register("grammarNotes")}
         />
       </div>
+
+      {isGrammar ? (
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-slate-700" htmlFor="edit-examples">
+            Examples
+            <span className="text-slate-400 font-normal ml-1">(one per line)</span>
+          </label>
+          <textarea
+            id="edit-examples"
+            rows={3}
+            placeholder={"日本語を勉強しています — I am studying Japanese"}
+            className={`${inputCls} resize-none`}
+            {...register("examples")}
+          />
+        </div>
+      ) : (
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-slate-700" htmlFor="edit-contextSentence">
+            Example sentence
+          </label>
+          <textarea
+            id="edit-contextSentence"
+            rows={2}
+            className={`${inputCls} resize-none`}
+            {...register("contextSentence")}
+          />
+        </div>
+      )}
 
       <div className="space-y-1">
         <label className="text-sm font-medium text-slate-700" htmlFor="edit-tags">
           Tags
           <span className="text-slate-400 font-normal ml-1">(comma separated)</span>
         </label>
-        <input
-          id="edit-tags"
-          type="text"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
-          {...register("tags")}
-        />
+        <input id="edit-tags" type="text" className={inputCls} {...register("tags")} />
       </div>
 
       <div className="flex gap-3 pt-1">

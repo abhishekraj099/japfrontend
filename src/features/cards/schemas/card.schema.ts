@@ -7,6 +7,8 @@ export const cardSchema = z.object({
   jlptLevel: z.enum(["", "N5", "N4", "N3", "N2", "N1"]).optional(),
   contextSentence: z.string().max(1000).optional(),
   grammarNotes: z.string().max(2000).optional(),
+  // Grammar-card examples, edited as one sentence per line in a textarea.
+  examples: z.string().max(5000).optional(),
   tags: z.string().optional(),
 });
 

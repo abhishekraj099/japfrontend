@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDeleteCard } from "../hooks/useCards";
 import { EditCardForm } from "./EditCardForm";
 import { CardTypeBadge } from "./CardTypeBadge";
+import { CardDetailsModal } from "./CardDetailsModal";
 import type { Card } from "@/types/card.types";
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 export function CardItem({ card, deckId }: Props) {
   const [editing, setEditing] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { mutate: deleteCard, isPending: deleting } = useDeleteCard(deckId);
   const isGrammar = card.cardType === "grammar";
@@ -116,6 +118,15 @@ export function CardItem({ card, deckId }: Props) {
 
       {/* Actions */}
       <div className="flex items-center gap-1 px-4 py-2 border-t border-slate-100 bg-slate-50">
+        {isGrammar && (
+          <button
+            onClick={() => setShowDetails(true)}
+            className="text-xs text-slate-500 hover:text-slate-800 px-3 py-1.5 rounded-lg hover:bg-white transition cursor-pointer"
+          >
+            Details
+          </button>
+        )}
+
         <button
           onClick={() => setEditing(true)}
           className="text-xs text-slate-500 hover:text-slate-800 px-3 py-1.5 rounded-lg hover:bg-white transition cursor-pointer"
@@ -148,6 +159,10 @@ export function CardItem({ card, deckId }: Props) {
           </button>
         )}
       </div>
+
+      {showDetails && (
+        <CardDetailsModal card={card} onClose={() => setShowDetails(false)} />
+      )}
     </div>
   );
 }
