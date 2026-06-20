@@ -25,6 +25,9 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
  */
 export function CardDetailsModal({ card, onClose }: Props) {
   const isGrammar = card.cardType === "grammar";
+  const isSentence = card.cardType === "sentence";
+  const frontLabel = isSentence ? "Sentence" : isGrammar ? "Pattern" : "Question";
+  const backLabel = isSentence ? "Translation" : isGrammar ? "Explanation" : "Answer";
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -66,7 +69,7 @@ export function CardDetailsModal({ card, onClose }: Props) {
 
         {/* Body */}
         <div className="px-6 py-5 space-y-5">
-          <Field label={isGrammar ? "Pattern" : "Question"}>
+          <Field label={frontLabel}>
             <p className="text-lg font-semibold text-slate-900 leading-snug">
               {card.question}
             </p>
@@ -75,7 +78,7 @@ export function CardDetailsModal({ card, onClose }: Props) {
             )}
           </Field>
 
-          <Field label={isGrammar ? "Explanation" : "Answer"}>
+          <Field label={backLabel}>
             <p className="text-slate-700 leading-snug whitespace-pre-line">
               {card.answer}
             </p>

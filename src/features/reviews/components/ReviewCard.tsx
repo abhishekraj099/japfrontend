@@ -13,6 +13,10 @@ interface Props {
 
 export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Props) {
   const isGrammar = card.cardType === "grammar";
+  const isSentence = card.cardType === "sentence";
+  const frontLabel = isSentence ? "Sentence" : isGrammar ? "Pattern" : "Question";
+  const backLabel = isSentence ? "Translation" : isGrammar ? "Meaning" : "Answer";
+  const showExamples = (isGrammar || isSentence) && card.examples.length > 0;
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -44,7 +48,7 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
           <div className="flex items-center justify-center gap-2 mb-4">
             <CardTypeBadge cardType={card.cardType} />
             <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
-              {isGrammar ? "Pattern" : "Question"}
+              {frontLabel}
             </span>
           </div>
           <p className="text-3xl font-bold text-slate-900 leading-snug break-words">
@@ -71,13 +75,17 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
           }`}
         >
           <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
-            {isGrammar ? "Meaning" : "Answer"}
+            {backLabel}
           </p>
           <p className="text-2xl font-semibold text-slate-700 leading-snug break-words">
             {card.answer}
           </p>
 
-          {isGrammar && card.examples.length > 0 && (
+          {isSentence && card.reading && (
+            <p className="text-sm text-slate-400 mt-2">{card.reading}</p>
+          )}
+
+          {showExamples && (
             <ul className="mt-5 space-y-1 text-left max-w-sm mx-auto">
               {card.examples.map((ex, i) => (
                 <li key={i} className="text-sm text-slate-500 leading-snug">

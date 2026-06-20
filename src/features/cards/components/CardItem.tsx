@@ -17,6 +17,9 @@ export function CardItem({ card, deckId }: Props) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { mutate: deleteCard, isPending: deleting } = useDeleteCard(deckId);
   const isGrammar = card.cardType === "grammar";
+  const isSentence = card.cardType === "sentence";
+  const frontLabel = isSentence ? "Sentence" : isGrammar ? "Pattern" : "Question";
+  const backLabel = isSentence ? "Translation" : isGrammar ? "Explanation" : "Answer";
 
   if (editing) {
     return (
@@ -36,7 +39,7 @@ export function CardItem({ card, deckId }: Props) {
       >
         <div className="flex-1">
           <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
-            {isGrammar ? "Pattern" : "Question"}
+            {frontLabel}
           </p>
           <p className="text-slate-900 font-medium leading-snug">{card.question}</p>
           {card.reading && (
@@ -60,7 +63,7 @@ export function CardItem({ card, deckId }: Props) {
       {expanded && (
         <div className="px-5 pb-4 border-t border-slate-100">
           <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mt-3 mb-1">
-            {isGrammar ? "Explanation" : "Answer"}
+            {backLabel}
           </p>
           <p className="text-slate-700 leading-snug">{card.answer}</p>
 
@@ -118,7 +121,7 @@ export function CardItem({ card, deckId }: Props) {
 
       {/* Actions */}
       <div className="flex items-center gap-1 px-4 py-2 border-t border-slate-100 bg-slate-50">
-        {isGrammar && (
+        {(isGrammar || isSentence) && (
           <button
             onClick={() => setShowDetails(true)}
             className="text-xs text-slate-500 hover:text-slate-800 px-3 py-1.5 rounded-lg hover:bg-white transition cursor-pointer"

@@ -1,7 +1,7 @@
 export type JlptLevel = "N5" | "N4" | "N3" | "N2" | "N1";
 
 /** Discriminator shared with the backend Card.cardType column. */
-export type CardType = "vocab" | "grammar";
+export type CardType = "vocab" | "grammar" | "sentence";
 
 export interface Card {
   id: string;

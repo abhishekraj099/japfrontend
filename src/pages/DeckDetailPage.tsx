@@ -6,12 +6,13 @@ import { CardList } from "@/features/cards/components/CardList";
 import { CreateCardForm } from "@/features/cards/components/CreateCardForm";
 import { ROUTES } from "@/constants/routes";
 
-type CardFilter = "all" | "vocab" | "grammar";
+type CardFilter = "all" | "vocab" | "grammar" | "sentence";
 
 const FILTERS: { key: CardFilter; label: string }[] = [
   { key: "all", label: "All" },
   { key: "vocab", label: "Vocabulary" },
   { key: "grammar", label: "Grammar" },
+  { key: "sentence", label: "Sentence" },
 ];
 
 function CardListSkeleton() {
@@ -200,7 +201,7 @@ export function DeckDetailPage() {
             <CardList cards={filteredCards} deckId={deckId ?? ""} />
           ) : (
             <p className="text-center text-sm text-slate-400 py-10">
-              No {filter === "grammar" ? "grammar" : "vocabulary"} cards in this deck.
+              No {filter} cards in this deck.
             </p>
           )}
         </>

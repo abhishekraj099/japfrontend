@@ -27,6 +27,9 @@ const inputCls =
 export function EditCardForm({ card, deckId, onClose }: Props) {
   const { mutate: updateCard, isPending, error } = useUpdateCard(deckId, onClose);
   const isGrammar = card.cardType === "grammar";
+  const isSentence = card.cardType === "sentence";
+  const frontLabel = isSentence ? "Sentence" : isGrammar ? "Pattern" : "Question";
+  const backLabel = isSentence ? "Translation" : isGrammar ? "Explanation" : "Answer";
 
   const {
     register,
@@ -59,14 +62,20 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
       question: data.question,
       answer: data.answer,
       tags: parseTags(data.tags),
-      jlptLevel: data.jlptLevel ? data.jlptLevel : undefined,
-      grammarNotes: data.grammarNotes || undefined,
     };
 
-    if (isGrammar) {
+    if (isSentence) {
+      // Sentence cards: text/translation/reading/examples only.
+      payload.reading = data.reading || undefined;
+      payload.examples = parseLines(data.examples);
+    } else if (isGrammar) {
+      payload.jlptLevel = data.jlptLevel ? data.jlptLevel : undefined;
+      payload.grammarNotes = data.grammarNotes || undefined;
       payload.examples = parseLines(data.examples);
     } else {
       // Vocabulary-only fields — unchanged behaviour.
+      payload.jlptLevel = data.jlptLevel ? data.jlptLevel : undefined;
+      payload.grammarNotes = data.grammarNotes || undefined;
       payload.reading = data.reading || undefined;
       payload.contextSentence = data.contextSentence || undefined;
     }
@@ -84,7 +93,7 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
 
       <div className="space-y-1">
         <label className="text-sm font-medium text-slate-700" htmlFor="edit-question">
-          {isGrammar ? "Pattern" : "Question"} <span className="text-red-500">*</span>
+          {frontLabel} <span className="text-red-500">*</span>
         </label>
         <textarea
           id="edit-question"
@@ -99,7 +108,7 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
 
       <div className="space-y-1">
         <label className="text-sm font-medium text-slate-700" htmlFor="edit-answer">
-          {isGrammar ? "Explanation" : "Answer"} <span className="text-red-500">*</span>
+          {backLabel} <span className="text-red-500">*</span>
         </label>
         <textarea
           id="edit-answer"
@@ -112,47 +121,53 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
         )}
       </div>
 
-      <div className={isGrammar ? "" : "grid grid-cols-2 gap-3"}>
+      {/* Reading (vocab + sentence) and JLPT (vocab + grammar). Side-by-side
+          only for vocab, where both are shown. */}
+      <div className={!isGrammar && !isSentence ? "grid grid-cols-2 gap-3" : ""}>
         {!isGrammar && (
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700" htmlFor="edit-reading">
-              Reading <span className="text-slate-400 font-normal">(furigana)</span>
-            </label>
-            <input id="edit-reading" type="text" className={inputCls} {...register("reading")} />
-          </div>
-        )}
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-slate-700" htmlFor="edit-reading">
+                Reading <span className="text-slate-400 font-normal">(furigana)</span>
+              </label>
+              <input id="edit-reading" type="text" className={inputCls} {...register("reading")} />
+            </div>
+          )}
+          {!isSentence && (
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-slate-700" htmlFor="edit-jlptLevel">
+                JLPT Level
+              </label>
+              <select
+                id="edit-jlptLevel"
+                className={`${inputCls} bg-white`}
+                {...register("jlptLevel")}
+              >
+                <option value="">—</option>
+                <option value="N5">N5</option>
+                <option value="N4">N4</option>
+                <option value="N3">N3</option>
+                <option value="N2">N2</option>
+                <option value="N1">N1</option>
+              </select>
+            </div>
+          )}
+      </div>
+
+      {!isSentence && (
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="edit-jlptLevel">
-            JLPT Level
+          <label className="text-sm font-medium text-slate-700" htmlFor="edit-grammarNotes">
+            Grammar notes
           </label>
-          <select
-            id="edit-jlptLevel"
-            className={`${inputCls} bg-white`}
-            {...register("jlptLevel")}
-          >
-            <option value="">—</option>
-            <option value="N5">N5</option>
-            <option value="N4">N4</option>
-            <option value="N3">N3</option>
-            <option value="N2">N2</option>
-            <option value="N1">N1</option>
-          </select>
+          <textarea
+            id="edit-grammarNotes"
+            rows={2}
+            className={`${inputCls} resize-none`}
+            {...register("grammarNotes")}
+          />
         </div>
-      </div>
+      )}
 
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="edit-grammarNotes">
-          Grammar notes
-        </label>
-        <textarea
-          id="edit-grammarNotes"
-          rows={2}
-          className={`${inputCls} resize-none`}
-          {...register("grammarNotes")}
-        />
-      </div>
-
-      {isGrammar ? (
+      {isGrammar || isSentence ? (
         <div className="space-y-1">
           <label className="text-sm font-medium text-slate-700" htmlFor="edit-examples">
             Examples
