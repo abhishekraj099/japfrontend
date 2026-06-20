@@ -1,6 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { deckSchema, type DeckSchema } from "../schemas/deck.schema";
+import {
+  deckSchema,
+  type DeckSchema,
+  type DeckSchemaInput,
+} from "../schemas/deck.schema";
 import { useUpdateDeck } from "../hooks/useDecks";
 import type { Deck } from "@/types/deck.types";
 
@@ -16,7 +20,7 @@ export function EditDeckForm({ deck, onClose }: Props) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<DeckSchema>({
+  } = useForm<DeckSchemaInput, unknown, DeckSchema>({
     resolver: zodResolver(deckSchema),
     defaultValues: {
       name: deck.name,

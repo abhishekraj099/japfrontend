@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from "react";
 import { RatingButtons } from "./RatingButtons";
+import { CardTypeBadge } from "@/features/cards/components/CardTypeBadge";
 import type { DueCard } from "@/types/review.types";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Props) {
+  const isGrammar = card.cardType === "grammar";
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -39,9 +41,12 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
       <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
         {/* Question */}
         <div className="px-8 py-10 text-center border-b border-slate-100">
-          <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
-            Question
-          </p>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <CardTypeBadge cardType={card.cardType} />
+            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+              {isGrammar ? "Pattern" : "Question"}
+            </span>
+          </div>
           <p className="text-3xl font-bold text-slate-900 leading-snug break-words">
             {card.question}
           </p>
@@ -66,11 +71,29 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
           }`}
         >
           <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
-            Answer
+            {isGrammar ? "Meaning" : "Answer"}
           </p>
           <p className="text-2xl font-semibold text-slate-700 leading-snug break-words">
             {card.answer}
           </p>
+
+          {isGrammar && card.examples.length > 0 && (
+            <ul className="mt-5 space-y-1 text-left max-w-sm mx-auto">
+              {card.examples.map((ex, i) => (
+                <li key={i} className="text-sm text-slate-500 leading-snug">
+                  {ex.replace("—", "→")}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {card.jlptLevel && (
+            <div className="mt-5">
+              <span className="text-xs font-semibold bg-indigo-50 text-indigo-600 px-2.5 py-0.5 rounded-full">
+                JLPT {card.jlptLevel}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 

@@ -1,3 +1,5 @@
+import type { CardType, JlptLevel } from "./card.types";
+
 export interface ReviewLog {
   id: string;
   cardId: string;
@@ -15,9 +17,13 @@ export interface SubmitReviewInput {
 
 export interface DueCard {
   id: string;
+  cardType: CardType;
   question: string;
   answer: string;
   tags: string[];
+  reading: string | null;
+  jlptLevel: JlptLevel | null;
+  examples: string[];
   deckId: string;
   schedule: {
     dueDate: string;

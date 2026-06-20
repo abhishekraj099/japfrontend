@@ -6,6 +6,14 @@ import { CardList } from "@/features/cards/components/CardList";
 import { CreateCardForm } from "@/features/cards/components/CreateCardForm";
 import { ROUTES } from "@/constants/routes";
 
+type CardFilter = "all" | "vocab" | "grammar";
+
+const FILTERS: { key: CardFilter; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "vocab", label: "Vocabulary" },
+  { key: "grammar", label: "Grammar" },
+];
+
 function CardListSkeleton() {
   return (
     <div className="space-y-3">
@@ -44,6 +52,7 @@ export function DeckDetailPage() {
   const { deckId } = useParams<{ deckId: string }>();
   const navigate = useNavigate();
   const [showCreate, setShowCreate] = useState(false);
+  const [filter, setFilter] = useState<CardFilter>("all");
 
   const {
     data: deck,
@@ -57,6 +66,10 @@ export function DeckDetailPage() {
     isError: cardsError,
     refetch,
   } = useCards(deckId ?? "");
+
+  const filteredCards = cards?.filter((c) =>
+    filter === "all" ? true : c.cardType === filter
+  );
 
   if (deckError) {
     return (
@@ -155,7 +168,42 @@ export function DeckDetailPage() {
       )}
 
       {!cardsLoading && !cardsError && cards && cards.length > 0 && (
-        <CardList cards={cards} deckId={deckId ?? ""} />
+        <>
+          {/* Filters — All / Vocabulary / Grammar */}
+          <div className="flex items-center gap-1.5">
+            {FILTERS.map(({ key, label }) => {
+              const count =
+                key === "all"
+                  ? cards.length
+                  : cards.filter((c) => c.cardType === key).length;
+              const active = filter === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setFilter(key)}
+                  className={`px-3 py-1.5 text-sm rounded-lg transition cursor-pointer ${
+                    active
+                      ? "bg-slate-900 text-white"
+                      : "border border-slate-300 text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  {label}
+                  <span className={active ? "text-slate-300 ml-1.5" : "text-slate-400 ml-1.5"}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {filteredCards && filteredCards.length > 0 ? (
+            <CardList cards={filteredCards} deckId={deckId ?? ""} />
+          ) : (
+            <p className="text-center text-sm text-slate-400 py-10">
+              No {filter === "grammar" ? "grammar" : "vocabulary"} cards in this deck.
+            </p>
+          )}
+        </>
       )}
     </div>
   );

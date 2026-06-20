@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDeleteCard } from "../hooks/useCards";
 import { EditCardForm } from "./EditCardForm";
+import { CardTypeBadge } from "./CardTypeBadge";
 import type { Card } from "@/types/card.types";
 
 interface Props {
@@ -13,6 +14,7 @@ export function CardItem({ card, deckId }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { mutate: deleteCard, isPending: deleting } = useDeleteCard(deckId);
+  const isGrammar = card.cardType === "grammar";
 
   if (editing) {
     return (
@@ -32,7 +34,7 @@ export function CardItem({ card, deckId }: Props) {
       >
         <div className="flex-1">
           <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
-            Question
+            {isGrammar ? "Pattern" : "Question"}
           </p>
           <p className="text-slate-900 font-medium leading-snug">{card.question}</p>
           {card.reading && (
@@ -40,6 +42,7 @@ export function CardItem({ card, deckId }: Props) {
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          <CardTypeBadge cardType={card.cardType} />
           {card.jlptLevel && (
             <span className="text-xs font-semibold bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">
               {card.jlptLevel}
@@ -55,28 +58,43 @@ export function CardItem({ card, deckId }: Props) {
       {expanded && (
         <div className="px-5 pb-4 border-t border-slate-100">
           <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mt-3 mb-1">
-            Answer
+            {isGrammar ? "Explanation" : "Answer"}
           </p>
           <p className="text-slate-700 leading-snug">{card.answer}</p>
-
-          {card.contextSentence && (
-            <div className="mt-3">
-              <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
-                Example
-              </p>
-              <p className="text-sm text-slate-600 italic leading-snug">
-                {card.contextSentence}
-              </p>
-            </div>
-          )}
 
           {card.grammarNotes && (
             <div className="mt-3">
               <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
-                Grammar
+                {isGrammar ? "Grammar notes" : "Grammar"}
               </p>
               <p className="text-sm text-slate-600 leading-snug">
                 {card.grammarNotes}
+              </p>
+            </div>
+          )}
+
+          {card.examples.length > 0 && (
+            <div className="mt-3">
+              <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+                {card.examples.length === 1 ? "Example" : "Examples"}
+              </p>
+              <ul className="space-y-0.5">
+                {card.examples.map((ex, i) => (
+                  <li key={i} className="text-sm text-slate-600 leading-snug">
+                    {ex.replace("—", "→")}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {card.contextSentence && (
+            <div className="mt-3">
+              <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+                {isGrammar ? "In context" : "Example"}
+              </p>
+              <p className="text-sm text-slate-600 italic leading-snug">
+                {card.contextSentence}
               </p>
             </div>
           )}

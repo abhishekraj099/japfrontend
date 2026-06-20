@@ -7,3 +7,7 @@ export const deckSchema = z.object({
 });
 
 export type DeckSchema = z.infer<typeof deckSchema>;
+// Pre-transform shape (before `.default()` is applied) — used as the
+// react-hook-form field-values type so the zodResolver input/output generics
+// line up.
+export type DeckSchemaInput = z.input<typeof deckSchema>;
