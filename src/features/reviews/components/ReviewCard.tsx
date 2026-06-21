@@ -1,6 +1,8 @@
 import { useEffect, useCallback } from "react";
 import { RatingButtons } from "./RatingButtons";
 import { CardTypeBadge } from "@/features/cards/components/CardTypeBadge";
+import { AudioButton } from "@/components/common/AudioButton";
+import { PitchAccent } from "@/components/common/PitchAccent";
 import type { DueCard } from "@/types/review.types";
 
 interface Props {
@@ -53,14 +55,18 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
           </div>
           <p className="font-jp text-4xl leading-snug text-ink-900 break-words">
             {card.question}
+            <AudioButton text={card.question} className="ml-2 align-middle text-2xl" />
           </p>
           {!isGrammar && !isSentence && card.reading && (
             <p className="font-jp mt-3 text-lg text-ink-500">{card.reading}</p>
           )}
-          {!isGrammar && !isSentence && card.pitchAccent && (
-            <p className="mt-1 text-lg font-semibold text-sakura-500">
-              [{card.pitchAccent}]
-            </p>
+          {!isGrammar && !isSentence && (
+            <div className="mt-1 flex items-center justify-center gap-2">
+              <PitchAccent reading={card.reading} pitchAccent={card.pitchAccent} />
+              {card.pitchAccent && (
+                <span className="text-sm font-semibold text-sakura-500">[{card.pitchAccent}]</span>
+              )}
+            </div>
           )}
           {card.tags.length > 0 && (
             <div className="mt-5 flex flex-wrap justify-center gap-1.5">
@@ -99,6 +105,7 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
               <p className="section-label mt-3">Example</p>
               <p className="font-jp text-sm leading-snug text-ink-700">
                 {card.exampleSentence}
+                <AudioButton text={card.exampleSentence} className="ml-1.5 align-middle text-xs" />
               </p>
               {card.exampleReading && (
                 <p className="font-jp text-xs text-ink-400">{card.exampleReading}</p>

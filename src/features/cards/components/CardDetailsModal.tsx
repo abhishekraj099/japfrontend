@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { CardTypeBadge } from "./CardTypeBadge";
+import { AudioButton } from "@/components/common/AudioButton";
+import { PitchAccent } from "@/components/common/PitchAccent";
 import type { Card } from "@/types/card.types";
 
 interface Props {
@@ -72,6 +74,7 @@ export function CardDetailsModal({ card, onClose }: Props) {
           <Field label={frontLabel}>
             <p className="text-lg font-semibold text-ink-900 leading-snug">
               {card.question}
+              <AudioButton text={card.question} className="ml-2 align-middle text-sm" />
             </p>
             {card.reading && (
               <p className="text-sm text-ink-400 mt-0.5">{card.reading}</p>
@@ -86,9 +89,10 @@ export function CardDetailsModal({ card, onClose }: Props) {
 
           {!isGrammar && !isSentence && card.pitchAccent && (
             <Field label="Pitch accent">
-              <p className="text-sm font-semibold text-sakura-500">
-                [{card.pitchAccent}]
-              </p>
+              <div className="flex items-center gap-2">
+                <PitchAccent reading={card.reading} pitchAccent={card.pitchAccent} />
+                <span className="text-sm font-semibold text-sakura-500">[{card.pitchAccent}]</span>
+              </div>
             </Field>
           )}
 

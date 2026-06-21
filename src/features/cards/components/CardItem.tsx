@@ -3,6 +3,8 @@ import { useDeleteCard } from "../hooks/useCards";
 import { EditCardForm } from "./EditCardForm";
 import { CardTypeBadge } from "./CardTypeBadge";
 import { CardDetailsModal } from "./CardDetailsModal";
+import { AudioButton } from "@/components/common/AudioButton";
+import { PitchAccent } from "@/components/common/PitchAccent";
 import type { Card } from "@/types/card.types";
 
 interface Props {
@@ -41,14 +43,20 @@ export function CardItem({ card, deckId }: Props) {
           <p className="text-xs font-medium text-ink-400 uppercase tracking-wide mb-1">
             {frontLabel}
           </p>
-          <p className="text-ink-900 font-medium leading-snug">{card.question}</p>
+          <p className="text-ink-900 font-medium leading-snug">
+            {card.question}
+            <AudioButton text={card.question} className="ml-1.5 align-middle text-xs" />
+          </p>
           {card.reading && (
             <p className="text-sm text-ink-400 mt-0.5">{card.reading}</p>
           )}
-          {!isGrammar && !isSentence && card.pitchAccent && (
-            <p className="text-sm font-semibold text-sakura-500 mt-0.5">
-              [{card.pitchAccent}]
-            </p>
+          {!isGrammar && !isSentence && (
+            <div className="mt-0.5 flex items-center gap-2">
+              <PitchAccent reading={card.reading} pitchAccent={card.pitchAccent} />
+              {card.pitchAccent && (
+                <span className="text-sm font-semibold text-sakura-500">[{card.pitchAccent}]</span>
+              )}
+            </div>
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
