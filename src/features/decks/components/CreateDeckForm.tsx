@@ -37,14 +37,14 @@ export function CreateDeckForm({ onClose }: Props) {
       )}
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="name">
+        <label className="text-[13px] font-medium text-ink-500" htmlFor="name">
           Deck name <span className="text-red-500">*</span>
         </label>
         <input
           id="name"
           type="text"
           placeholder="e.g. JLPT N5 Vocabulary"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
           {...register("name")}
         />
         {errors.name && (
@@ -53,14 +53,14 @@ export function CreateDeckForm({ onClose }: Props) {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="description">
+        <label className="text-[13px] font-medium text-ink-500" htmlFor="description">
           Description
         </label>
         <textarea
           id="description"
           rows={3}
           placeholder="What will you study in this deck?"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition resize-none"
+          className="w-full resize-none rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
           {...register("description")}
         />
         {errors.description && (
@@ -72,14 +72,14 @@ export function CreateDeckForm({ onClose }: Props) {
         <button
           type="button"
           onClick={onClose}
-          className="flex-1 px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-50 transition cursor-pointer"
+          className="flex-1 rounded-xl bg-fill2 px-4 py-3 text-[16px] font-semibold text-blue-500 transition active:scale-[0.98] cursor-pointer"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 px-4 py-2 text-sm bg-slate-900 text-white rounded-lg hover:bg-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="flex-1 rounded-xl bg-blue-500 px-4 py-3 text-[16px] font-semibold text-white transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {isPending ? "Creating…" : "Create Deck"}
         </button>

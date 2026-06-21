@@ -24,8 +24,8 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit((data) => register_(data))} className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold text-slate-900">Create account</h2>
-        <p className="text-sm text-slate-500 mt-1">Start learning Japanese today</p>
+        <h2 className="text-[22px] font-bold text-label">Create account</h2>
+        <p className="text-[15px] text-ink-500 mt-0.5">Start learning Japanese today</p>
       </div>
 
       {errorMessage && (
@@ -35,7 +35,7 @@ export function RegisterForm() {
       )}
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="name">
+        <label className="text-[13px] font-medium text-ink-500" htmlFor="name">
           Name
         </label>
         <input
@@ -43,7 +43,7 @@ export function RegisterForm() {
           type="text"
           autoComplete="name"
           placeholder="Your name"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
           {...register("name")}
         />
         {errors.name && (
@@ -52,7 +52,7 @@ export function RegisterForm() {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="email">
+        <label className="text-[13px] font-medium text-ink-500" htmlFor="email">
           Email
         </label>
         <input
@@ -60,7 +60,7 @@ export function RegisterForm() {
           type="email"
           autoComplete="email"
           placeholder="you@example.com"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
           {...register("email")}
         />
         {errors.email && (
@@ -69,7 +69,7 @@ export function RegisterForm() {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="password">
+        <label className="text-[13px] font-medium text-ink-500" htmlFor="password">
           Password
         </label>
         <input
@@ -77,7 +77,7 @@ export function RegisterForm() {
           type="password"
           autoComplete="new-password"
           placeholder="Min 8 characters"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
           {...register("password")}
         />
         {errors.password && (
@@ -88,14 +88,14 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-slate-900 hover:bg-slate-700 text-white text-sm font-medium py-2.5 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="w-full rounded-xl bg-blue-500 py-3 text-[17px] font-semibold text-white transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
       >
-        {isPending ? "Creating account…" : "Create account"}
+        {isPending ? "Creating account…" : "Create Account"}
       </button>
 
-      <p className="text-center text-sm text-slate-500">
+      <p className="text-center text-[15px] text-ink-500">
         Already have an account?{" "}
-        <Link to={ROUTES.LOGIN} className="text-slate-900 font-medium hover:underline">
+        <Link to={ROUTES.LOGIN} className="font-semibold text-blue-500">
           Sign in
         </Link>
       </p>

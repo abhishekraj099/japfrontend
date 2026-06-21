@@ -1,15 +1,17 @@
 import { Outlet } from "react-router-dom";
-import { APP_NAME } from "@/constants/app";
 
 export function AuthLayout() {
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">{APP_NAME}</h1>
-          <p className="text-slate-500 mt-1">Japanese Learning App</p>
+    <div className="flex min-h-screen items-center justify-center p-5">
+      <div className="w-full max-w-sm">
+        <div className="mb-8 flex flex-col items-center text-center">
+          <span className="mb-4 flex h-16 w-16 items-center justify-center rounded-[20px] bg-gradient-to-br from-blue-500 to-indigo-500 font-jp text-3xl font-medium text-white shadow-lg">
+            語
+          </span>
+          <h1 className="ios-large-title text-[28px] text-label">JAP</h1>
+          <p className="mt-1 text-[15px] text-ink-500">Learn Japanese, one card at a time</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+        <div className="ios-card p-7">
           <Outlet />
         </div>
       </div>

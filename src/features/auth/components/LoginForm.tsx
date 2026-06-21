@@ -24,8 +24,8 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit((data) => login(data))} className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold text-slate-900">Welcome back</h2>
-        <p className="text-sm text-slate-500 mt-1">Sign in to your account</p>
+        <h2 className="text-[22px] font-bold text-label">Welcome back</h2>
+        <p className="text-[15px] text-ink-500 mt-0.5">Sign in to keep learning</p>
       </div>
 
       {errorMessage && (
@@ -35,7 +35,7 @@ export function LoginForm() {
       )}
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="email">
+        <label className="text-[13px] font-medium text-ink-500" htmlFor="email">
           Email
         </label>
         <input
@@ -43,7 +43,7 @@ export function LoginForm() {
           type="email"
           autoComplete="email"
           placeholder="you@example.com"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
           {...register("email")}
         />
         {errors.email && (
@@ -52,7 +52,7 @@ export function LoginForm() {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="password">
+        <label className="text-[13px] font-medium text-ink-500" htmlFor="password">
           Password
         </label>
         <input
@@ -60,7 +60,7 @@ export function LoginForm() {
           type="password"
           autoComplete="current-password"
           placeholder="••••••••"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
           {...register("password")}
         />
         {errors.password && (
@@ -71,15 +71,15 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-slate-900 hover:bg-slate-700 text-white text-sm font-medium py-2.5 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="w-full rounded-xl bg-blue-500 py-3 text-[17px] font-semibold text-white transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
       >
-        {isPending ? "Signing in…" : "Sign in"}
+        {isPending ? "Signing in…" : "Sign In"}
       </button>
 
-      <p className="text-center text-sm text-slate-500">
-        Don't have an account?{" "}
-        <Link to={ROUTES.REGISTER} className="text-slate-900 font-medium hover:underline">
-          Create one
+      <p className="text-center text-[15px] text-ink-500">
+        New here?{" "}
+        <Link to={ROUTES.REGISTER} className="font-semibold text-blue-500">
+          Create an account
         </Link>
       </p>
     </form>
