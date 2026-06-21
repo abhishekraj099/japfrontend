@@ -4,6 +4,7 @@ import { useDeck } from "@/features/decks/hooks/useDeck";
 import { useCards } from "@/features/cards/hooks/useCards";
 import { CardList } from "@/features/cards/components/CardList";
 import { CreateCardForm } from "@/features/cards/components/CreateCardForm";
+import { exportDeckToAnki } from "@/features/cards/utils/ankiExport";
 import { ROUTES } from "@/constants/routes";
 
 type CardFilter = "all" | "vocab" | "grammar" | "sentence";
@@ -129,6 +130,16 @@ export function DeckDetailPage() {
           >
             Study
           </Link>
+          <button
+            onClick={() =>
+              cards && exportDeckToAnki(deck?.name ?? "deck", cards)
+            }
+            disabled={!cards || cards.length === 0}
+            title="Export this deck as an Anki-compatible CSV"
+            className="px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-50 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Export to Anki
+          </button>
           <button
             onClick={() => setShowCreate(true)}
             className="px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-700 transition cursor-pointer"
