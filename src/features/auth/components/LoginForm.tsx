@@ -24,8 +24,8 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit((data) => login(data))} className="space-y-5">
       <div>
-        <h2 className="text-[22px] font-bold text-label">Welcome back</h2>
-        <p className="text-[15px] text-ink-500 mt-0.5">Sign in to keep learning</p>
+        <h2 className="font-display text-3xl text-ink-900">Welcome back</h2>
+        <p className="text-[15px] text-ink-500 mt-1">Sign in to keep learning</p>
       </div>
 
       {errorMessage && (
@@ -43,7 +43,7 @@ export function LoginForm() {
           type="email"
           autoComplete="email"
           placeholder="you@example.com"
-          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
+          className="w-full rounded-xl border border-line bg-paper/50 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-200 focus:ring-2 focus:ring-indigo-100"
           {...register("email")}
         />
         {errors.email && (
@@ -60,7 +60,7 @@ export function LoginForm() {
           type="password"
           autoComplete="current-password"
           placeholder="••••••••"
-          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
+          className="w-full rounded-xl border border-line bg-paper/50 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-200 focus:ring-2 focus:ring-indigo-100"
           {...register("password")}
         />
         {errors.password && (
@@ -71,14 +71,14 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-xl bg-blue-500 py-3 text-[17px] font-semibold text-white transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="w-full rounded-xl bg-indigo-500 py-3.5 text-[16px] font-semibold text-paper transition hover:bg-indigo-600 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
       >
-        {isPending ? "Signing in…" : "Sign In"}
+        {isPending ? "Signing in…" : "Sign in"}
       </button>
 
       <p className="text-center text-[15px] text-ink-500">
         New here?{" "}
-        <Link to={ROUTES.REGISTER} className="font-semibold text-blue-500">
+        <Link to={ROUTES.REGISTER} className="font-semibold text-sakura-600">
           Create an account
         </Link>
       </p>

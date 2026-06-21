@@ -12,19 +12,23 @@ import { DictionaryPage } from "@/pages/DictionaryPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { OnboardingPage, ONBOARDED_KEY } from "@/pages/OnboardingPage";
 import { IntegrationsPage } from "@/pages/IntegrationsPage";
+import { AccountPage } from "@/pages/AccountPage";
+import { LandingPage } from "@/pages/LandingPage";
+import { useAuthContext } from "@/providers/AuthProvider";
 
-function HomeRedirect() {
-  const onboarded =
-    typeof window !== "undefined" && localStorage.getItem(ONBOARDED_KEY) === "1";
-  return (
-    <Navigate to={onboarded ? ROUTES.DASHBOARD : ROUTES.ONBOARDING} replace />
-  );
+void ONBOARDED_KEY;
+
+function Home() {
+  const { user, isLoading } = useAuthContext();
+  if (isLoading) return null;
+  if (user) return <Navigate to={ROUTES.DASHBOARD} replace />;
+  return <LandingPage />;
 }
 
 export const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
-    element: <HomeRedirect />,
+    element: <Home />,
   },
   {
     element: <PublicOnlyRoute />,
@@ -52,6 +56,7 @@ export const router = createBrowserRouter([
           { path: "/decks/:deckId", element: <DeckDetailPage /> },
           { path: ROUTES.REVIEW, element: <ReviewPage /> },
           { path: ROUTES.DICTIONARY, element: <DictionaryPage /> },
+          { path: ROUTES.ACCOUNT, element: <AccountPage /> },
           { path: ROUTES.INTEGRATIONS, element: <IntegrationsPage /> },
         ],
       },

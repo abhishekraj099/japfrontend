@@ -10,7 +10,7 @@ interface Props {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+      <p className="text-xs font-medium text-ink-400 uppercase tracking-wide mb-1">
         {label}
       </p>
       {children}
@@ -39,17 +39,17 @@ export function CardDetailsModal({ card, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
+        className="bg-card rounded-2xl shadow-xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between gap-3 px-6 py-4 border-b border-slate-100 sticky top-0 bg-white">
+        <div className="flex items-center justify-between gap-3 px-6 py-4 border-b border-line sticky top-0 bg-card">
           <div className="flex items-center gap-2">
             <CardTypeBadge cardType={card.cardType} />
             {card.jlptLevel && (
@@ -60,7 +60,7 @@ export function CardDetailsModal({ card, onClose }: Props) {
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-700 text-xl leading-none px-2 cursor-pointer"
+            className="text-ink-400 hover:text-ink-700 text-xl leading-none px-2 cursor-pointer"
             aria-label="Close"
           >
             ×
@@ -70,23 +70,23 @@ export function CardDetailsModal({ card, onClose }: Props) {
         {/* Body */}
         <div className="px-6 py-5 space-y-5">
           <Field label={frontLabel}>
-            <p className="text-lg font-semibold text-slate-900 leading-snug">
+            <p className="text-lg font-semibold text-ink-900 leading-snug">
               {card.question}
             </p>
             {card.reading && (
-              <p className="text-sm text-slate-400 mt-0.5">{card.reading}</p>
+              <p className="text-sm text-ink-400 mt-0.5">{card.reading}</p>
             )}
           </Field>
 
           <Field label={backLabel}>
-            <p className="text-slate-700 leading-snug whitespace-pre-line">
+            <p className="text-ink-700 leading-snug whitespace-pre-line">
               {card.answer}
             </p>
           </Field>
 
           {!isGrammar && !isSentence && card.pitchAccent && (
             <Field label="Pitch accent">
-              <p className="text-sm font-semibold text-pink-600">
+              <p className="text-sm font-semibold text-sakura-500">
                 [{card.pitchAccent}]
               </p>
             </Field>
@@ -94,7 +94,7 @@ export function CardDetailsModal({ card, onClose }: Props) {
 
           {card.grammarNotes && (
             <Field label="Grammar notes">
-              <p className="text-sm text-slate-600 leading-snug whitespace-pre-line">
+              <p className="text-sm text-ink-500 leading-snug whitespace-pre-line">
                 {card.grammarNotes}
               </p>
             </Field>
@@ -104,7 +104,7 @@ export function CardDetailsModal({ card, onClose }: Props) {
             <Field label={card.examples.length === 1 ? "Example" : "Examples"}>
               <ul className="space-y-1">
                 {card.examples.map((ex, i) => (
-                  <li key={i} className="text-sm text-slate-600 leading-snug">
+                  <li key={i} className="text-sm text-ink-500 leading-snug">
                     {ex.replace("—", "→")}
                   </li>
                 ))}
@@ -114,7 +114,7 @@ export function CardDetailsModal({ card, onClose }: Props) {
 
           {card.contextSentence && (
             <Field label={isGrammar ? "In context" : "Example"}>
-              <p className="text-sm text-slate-600 italic leading-snug">
+              <p className="text-sm text-ink-500 italic leading-snug">
                 {card.contextSentence}
               </p>
             </Field>
@@ -125,7 +125,7 @@ export function CardDetailsModal({ card, onClose }: Props) {
               {card.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full"
+                  className="text-xs bg-paper text-ink-500 px-2 py-0.5 rounded-full"
                 >
                   {tag}
                 </span>

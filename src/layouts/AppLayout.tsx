@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { Layers, GraduationCap, BookOpen, Settings } from "lucide-react";
 import { useAuthContext } from "@/providers/AuthProvider";
 import { ROUTES } from "@/constants/routes";
@@ -16,13 +16,7 @@ function initials(name?: string) {
 }
 
 export function AppLayout() {
-  const { user, clearAuth } = useAuthContext();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    clearAuth();
-    navigate(ROUTES.LOGIN);
-  };
+  const { user } = useAuthContext();
 
   return (
     <div className="min-h-screen">
@@ -41,13 +35,13 @@ export function AppLayout() {
             <span className="hidden text-sm text-ink-500 sm:inline">
               {user?.name?.split(" ")[0]}
             </span>
-            <button
-              onClick={handleLogout}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-sakura-400 to-sakura-600 text-xs font-bold text-paper"
-              title="Log out"
+            <Link
+              to={ROUTES.ACCOUNT}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 text-xs font-bold text-white shadow-sm transition hover:scale-105"
+              title="Account"
             >
               {initials(user?.name)}
-            </button>
+            </Link>
           </div>
         </div>
       </header>

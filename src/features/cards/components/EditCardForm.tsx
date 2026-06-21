@@ -22,7 +22,7 @@ function parseLines(raw: string | undefined): string[] {
 }
 
 const inputCls =
-  "w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition";
+  "w-full px-3 py-2 border border-line rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition";
 
 export function EditCardForm({ card, deckId, onClose }: Props) {
   const { mutate: updateCard, isPending, error } = useUpdateCard(deckId, onClose);
@@ -88,13 +88,13 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {errorMessage && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
+        <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">
           {errorMessage}
         </div>
       )}
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="edit-question">
+        <label className="text-sm font-medium text-ink-700" htmlFor="edit-question">
           {frontLabel} <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -109,7 +109,7 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="edit-answer">
+        <label className="text-sm font-medium text-ink-700" htmlFor="edit-answer">
           {backLabel} <span className="text-red-500">*</span>
         </label>
         <textarea
@@ -128,20 +128,20 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
       <div className={!isGrammar && !isSentence ? "grid grid-cols-2 gap-3" : ""}>
         {!isGrammar && (
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700" htmlFor="edit-reading">
-                Reading <span className="text-slate-400 font-normal">(furigana)</span>
+              <label className="text-sm font-medium text-ink-700" htmlFor="edit-reading">
+                Reading <span className="text-ink-400 font-normal">(furigana)</span>
               </label>
               <input id="edit-reading" type="text" className={inputCls} {...register("reading")} />
             </div>
           )}
           {!isSentence && (
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700" htmlFor="edit-jlptLevel">
+              <label className="text-sm font-medium text-ink-700" htmlFor="edit-jlptLevel">
                 JLPT Level
               </label>
               <select
                 id="edit-jlptLevel"
-                className={`${inputCls} bg-white`}
+                className={`${inputCls} bg-card`}
                 {...register("jlptLevel")}
               >
                 <option value="">—</option>
@@ -158,8 +158,8 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
       {/* Pitch accent — vocabulary cards only. Optional metadata. */}
       {!isGrammar && !isSentence && (
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="edit-pitchAccent">
-            Pitch accent <span className="text-slate-400 font-normal">(optional)</span>
+          <label className="text-sm font-medium text-ink-700" htmlFor="edit-pitchAccent">
+            Pitch accent <span className="text-ink-400 font-normal">(optional)</span>
           </label>
           <input
             id="edit-pitchAccent"
@@ -173,7 +173,7 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
 
       {!isSentence && (
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="edit-grammarNotes">
+          <label className="text-sm font-medium text-ink-700" htmlFor="edit-grammarNotes">
             Grammar notes
           </label>
           <textarea
@@ -187,9 +187,9 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
 
       {isGrammar || isSentence ? (
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="edit-examples">
+          <label className="text-sm font-medium text-ink-700" htmlFor="edit-examples">
             Examples
-            <span className="text-slate-400 font-normal ml-1">(one per line)</span>
+            <span className="text-ink-400 font-normal ml-1">(one per line)</span>
           </label>
           <textarea
             id="edit-examples"
@@ -201,7 +201,7 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
         </div>
       ) : (
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="edit-contextSentence">
+          <label className="text-sm font-medium text-ink-700" htmlFor="edit-contextSentence">
             Example sentence
           </label>
           <textarea
@@ -214,9 +214,9 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
       )}
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="edit-tags">
+        <label className="text-sm font-medium text-ink-700" htmlFor="edit-tags">
           Tags
-          <span className="text-slate-400 font-normal ml-1">(comma separated)</span>
+          <span className="text-ink-400 font-normal ml-1">(comma separated)</span>
         </label>
         <input id="edit-tags" type="text" className={inputCls} {...register("tags")} />
       </div>
@@ -225,14 +225,14 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
         <button
           type="button"
           onClick={onClose}
-          className="flex-1 px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-50 transition cursor-pointer"
+          className="flex-1 px-4 py-2 text-sm border border-line rounded-xl hover:bg-paper transition cursor-pointer"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 px-4 py-2 text-sm bg-slate-900 text-white rounded-lg hover:bg-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="flex-1 px-4 py-2 text-sm bg-indigo-500 text-paper rounded-xl hover:bg-indigo-600 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {isPending ? "Saving…" : "Save Changes"}
         </button>

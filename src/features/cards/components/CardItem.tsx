@@ -23,30 +23,30 @@ export function CardItem({ card, deckId }: Props) {
 
   if (editing) {
     return (
-      <div className="bg-white border border-slate-200 rounded-xl p-5">
-        <p className="text-sm font-semibold text-slate-700 mb-4">Edit Card</p>
+      <div className="paper-card p-5">
+        <p className="text-sm font-semibold text-ink-700 mb-4">Edit Card</p>
         <EditCardForm card={card} deckId={deckId} onClose={() => setEditing(false)} />
       </div>
     );
   }
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-slate-300 hover:shadow-sm transition">
+    <div className="paper-card overflow-hidden tap">
       {/* Question row — always visible */}
       <button
         className="w-full text-left px-5 py-4 flex items-start justify-between gap-4 cursor-pointer"
         onClick={() => setExpanded((v) => !v)}
       >
         <div className="flex-1">
-          <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+          <p className="text-xs font-medium text-ink-400 uppercase tracking-wide mb-1">
             {frontLabel}
           </p>
-          <p className="text-slate-900 font-medium leading-snug">{card.question}</p>
+          <p className="text-ink-900 font-medium leading-snug">{card.question}</p>
           {card.reading && (
-            <p className="text-sm text-slate-400 mt-0.5">{card.reading}</p>
+            <p className="text-sm text-ink-400 mt-0.5">{card.reading}</p>
           )}
           {!isGrammar && !isSentence && card.pitchAccent && (
-            <p className="text-sm font-semibold text-pink-600 mt-0.5">
+            <p className="text-sm font-semibold text-sakura-500 mt-0.5">
               [{card.pitchAccent}]
             </p>
           )}
@@ -58,7 +58,7 @@ export function CardItem({ card, deckId }: Props) {
               {card.jlptLevel}
             </span>
           )}
-          <span className="text-slate-400 text-lg mt-0.5">
+          <span className="text-ink-400 text-lg mt-0.5">
             {expanded ? "▲" : "▼"}
           </span>
         </div>
@@ -66,18 +66,18 @@ export function CardItem({ card, deckId }: Props) {
 
       {/* Answer — revealed on expand */}
       {expanded && (
-        <div className="px-5 pb-4 border-t border-slate-100">
-          <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mt-3 mb-1">
+        <div className="px-5 pb-4 border-t border-line">
+          <p className="text-xs font-medium text-ink-400 uppercase tracking-wide mt-3 mb-1">
             {backLabel}
           </p>
-          <p className="text-slate-700 leading-snug">{card.answer}</p>
+          <p className="text-ink-700 leading-snug">{card.answer}</p>
 
           {card.grammarNotes && (
             <div className="mt-3">
-              <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-ink-400 uppercase tracking-wide mb-1">
                 {isGrammar ? "Grammar notes" : "Grammar"}
               </p>
-              <p className="text-sm text-slate-600 leading-snug">
+              <p className="text-sm text-ink-500 leading-snug">
                 {card.grammarNotes}
               </p>
             </div>
@@ -85,12 +85,12 @@ export function CardItem({ card, deckId }: Props) {
 
           {card.examples.length > 0 && (
             <div className="mt-3">
-              <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-ink-400 uppercase tracking-wide mb-1">
                 {card.examples.length === 1 ? "Example" : "Examples"}
               </p>
               <ul className="space-y-0.5">
                 {card.examples.map((ex, i) => (
-                  <li key={i} className="text-sm text-slate-600 leading-snug">
+                  <li key={i} className="text-sm text-ink-500 leading-snug">
                     {ex.replace("—", "→")}
                   </li>
                 ))}
@@ -100,10 +100,10 @@ export function CardItem({ card, deckId }: Props) {
 
           {card.contextSentence && (
             <div className="mt-3">
-              <p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-ink-400 uppercase tracking-wide mb-1">
                 {isGrammar ? "In context" : "Example"}
               </p>
-              <p className="text-sm text-slate-600 italic leading-snug">
+              <p className="text-sm text-ink-500 italic leading-snug">
                 {card.contextSentence}
               </p>
             </div>
@@ -114,7 +114,7 @@ export function CardItem({ card, deckId }: Props) {
               {card.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full"
+                  className="text-xs bg-paper text-ink-500 px-2 py-0.5 rounded-full"
                 >
                   {tag}
                 </span>
@@ -125,11 +125,11 @@ export function CardItem({ card, deckId }: Props) {
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-1 px-4 py-2 border-t border-slate-100 bg-slate-50">
+      <div className="flex items-center gap-1 px-4 py-2 border-t border-line bg-paper">
         {(isGrammar || isSentence) && (
           <button
             onClick={() => setShowDetails(true)}
-            className="text-xs text-slate-500 hover:text-slate-800 px-3 py-1.5 rounded-lg hover:bg-white transition cursor-pointer"
+            className="text-xs text-ink-500 hover:text-ink-900 px-3 py-1.5 rounded-lg hover:bg-card transition cursor-pointer"
           >
             Details
           </button>
@@ -137,7 +137,7 @@ export function CardItem({ card, deckId }: Props) {
 
         <button
           onClick={() => setEditing(true)}
-          className="text-xs text-slate-500 hover:text-slate-800 px-3 py-1.5 rounded-lg hover:bg-white transition cursor-pointer"
+          className="text-xs text-ink-500 hover:text-ink-900 px-3 py-1.5 rounded-lg hover:bg-card transition cursor-pointer"
         >
           Edit
         </button>
@@ -147,13 +147,13 @@ export function CardItem({ card, deckId }: Props) {
             <button
               onClick={() => deleteCard(card.id)}
               disabled={deleting}
-              className="text-xs text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-lg transition disabled:opacity-50 cursor-pointer"
+              className="text-xs text-white bg-sakura-500 hover:bg-sakura-600 px-3 py-1.5 rounded-lg transition disabled:opacity-50 cursor-pointer"
             >
               {deleting ? "…" : "Confirm delete"}
             </button>
             <button
               onClick={() => setConfirmDelete(false)}
-              className="text-xs text-slate-500 hover:bg-white px-3 py-1.5 rounded-lg transition cursor-pointer"
+              className="text-xs text-ink-500 hover:bg-card px-3 py-1.5 rounded-lg transition cursor-pointer"
             >
               Cancel
             </button>
@@ -161,7 +161,7 @@ export function CardItem({ card, deckId }: Props) {
         ) : (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="text-xs text-red-400 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-white transition ml-auto cursor-pointer"
+            className="text-xs text-sakura-500 hover:text-sakura-600 px-3 py-1.5 rounded-lg hover:bg-card transition ml-auto cursor-pointer"
           >
             Delete
           </button>

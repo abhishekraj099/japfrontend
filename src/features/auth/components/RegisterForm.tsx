@@ -24,8 +24,8 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit((data) => register_(data))} className="space-y-5">
       <div>
-        <h2 className="text-[22px] font-bold text-label">Create account</h2>
-        <p className="text-[15px] text-ink-500 mt-0.5">Start learning Japanese today</p>
+        <h2 className="font-display text-3xl text-ink-900">Create account</h2>
+        <p className="text-[15px] text-ink-500 mt-1">Start learning Japanese today</p>
       </div>
 
       {errorMessage && (
@@ -43,7 +43,7 @@ export function RegisterForm() {
           type="text"
           autoComplete="name"
           placeholder="Your name"
-          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
+          className="w-full rounded-xl border border-line bg-paper/50 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-200 focus:ring-2 focus:ring-indigo-100"
           {...register("name")}
         />
         {errors.name && (
@@ -60,7 +60,7 @@ export function RegisterForm() {
           type="email"
           autoComplete="email"
           placeholder="you@example.com"
-          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
+          className="w-full rounded-xl border border-line bg-paper/50 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-200 focus:ring-2 focus:ring-indigo-100"
           {...register("email")}
         />
         {errors.email && (
@@ -77,7 +77,7 @@ export function RegisterForm() {
           type="password"
           autoComplete="new-password"
           placeholder="Min 8 characters"
-          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
+          className="w-full rounded-xl border border-line bg-paper/50 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-200 focus:ring-2 focus:ring-indigo-100"
           {...register("password")}
         />
         {errors.password && (
@@ -88,14 +88,14 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-xl bg-blue-500 py-3 text-[17px] font-semibold text-white transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="w-full rounded-xl bg-indigo-500 py-3.5 text-[16px] font-semibold text-paper transition hover:bg-indigo-600 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
       >
-        {isPending ? "Creating account…" : "Create Account"}
+        {isPending ? "Creating account…" : "Create account"}
       </button>
 
       <p className="text-center text-[15px] text-ink-500">
         Already have an account?{" "}
-        <Link to={ROUTES.LOGIN} className="font-semibold text-blue-500">
+        <Link to={ROUTES.LOGIN} className="font-semibold text-sakura-600">
           Sign in
         </Link>
       </p>

@@ -44,7 +44,7 @@ export function CreateDeckForm({ onClose }: Props) {
           id="name"
           type="text"
           placeholder="e.g. JLPT N5 Vocabulary"
-          className="w-full rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
+          className="w-full rounded-xl border border-line bg-paper/50 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-200 focus:ring-2 focus:ring-indigo-100"
           {...register("name")}
         />
         {errors.name && (
@@ -60,7 +60,7 @@ export function CreateDeckForm({ onClose }: Props) {
           id="description"
           rows={3}
           placeholder="What will you study in this deck?"
-          className="w-full resize-none rounded-xl bg-fill2 px-4 py-3 text-[16px] text-label outline-none transition placeholder:text-ink-400 focus:ring-2 focus:ring-blue-500/40"
+          className="w-full resize-none rounded-xl border border-line bg-paper/50 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-200 focus:ring-2 focus:ring-indigo-100"
           {...register("description")}
         />
         {errors.description && (
@@ -72,16 +72,16 @@ export function CreateDeckForm({ onClose }: Props) {
         <button
           type="button"
           onClick={onClose}
-          className="flex-1 rounded-xl bg-fill2 px-4 py-3 text-[16px] font-semibold text-blue-500 transition active:scale-[0.98] cursor-pointer"
+          className="flex-1 rounded-xl border border-line bg-paper/50 px-4 py-3 text-[16px] font-semibold text-ink-700 transition active:scale-[0.98] cursor-pointer"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 rounded-xl bg-blue-500 px-4 py-3 text-[16px] font-semibold text-white transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="flex-1 rounded-xl bg-indigo-500 px-4 py-3 text-[16px] font-semibold text-paper transition hover:bg-indigo-600 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
-          {isPending ? "Creating…" : "Create Deck"}
+          {isPending ? "Creating…" : "Create deck"}
         </button>
       </div>
     </form>

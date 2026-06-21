@@ -42,32 +42,30 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
   return (
     <div className="space-y-6">
       {/* Card face */}
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+      <div className="paper-card overflow-hidden">
         {/* Question */}
-        <div className="px-8 py-10 text-center border-b border-slate-100">
-          <div className="flex items-center justify-center gap-2 mb-4">
+        <div className="border-b border-line px-8 py-12 text-center">
+          <div className="mb-5 flex items-center justify-center gap-2">
             <CardTypeBadge cardType={card.cardType} />
-            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
-              {frontLabel}
-            </span>
+            <span className="section-label">{frontLabel}</span>
           </div>
-          <p className="text-3xl font-bold text-slate-900 leading-snug break-words">
+          <p className="font-jp text-4xl leading-snug text-ink-900 break-words">
             {card.question}
           </p>
           {!isGrammar && !isSentence && card.reading && (
-            <p className="text-lg text-slate-400 mt-2">{card.reading}</p>
+            <p className="font-jp mt-3 text-lg text-ink-500">{card.reading}</p>
           )}
           {!isGrammar && !isSentence && card.pitchAccent && (
-            <p className="text-lg font-semibold text-pink-600 mt-1">
+            <p className="mt-1 text-lg font-semibold text-sakura-500">
               [{card.pitchAccent}]
             </p>
           )}
           {card.tags.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-1.5 mt-4">
+            <div className="mt-5 flex flex-wrap justify-center gap-1.5">
               {card.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="text-xs bg-slate-100 text-slate-400 px-2 py-0.5 rounded-full"
+                  className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs text-indigo-400"
                 >
                   {tag}
                 </span>
@@ -78,25 +76,23 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
 
         {/* Answer — hidden until revealed */}
         <div
-          className={`px-8 py-8 text-center transition-all duration-300 ${
-            revealed ? "opacity-100" : "opacity-0 pointer-events-none h-0 py-0"
+          className={`px-8 py-9 text-center transition-all duration-300 ${
+            revealed ? "opacity-100" : "pointer-events-none h-0 py-0 opacity-0"
           }`}
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-4">
-            {backLabel}
-          </p>
-          <p className="text-2xl font-semibold text-slate-700 leading-snug break-words">
+          <p className="section-label mb-4 text-sakura-500">{backLabel}</p>
+          <p className="font-jp text-3xl leading-snug text-indigo-500 break-words">
             {card.answer}
           </p>
 
           {isSentence && card.reading && (
-            <p className="text-sm text-slate-400 mt-2">{card.reading}</p>
+            <p className="font-jp mt-2 text-sm text-ink-500">{card.reading}</p>
           )}
 
           {showExamples && (
-            <ul className="mt-5 space-y-1 text-left max-w-sm mx-auto">
+            <ul className="mx-auto mt-5 max-w-sm space-y-1 text-left">
               {card.examples.map((ex, i) => (
-                <li key={i} className="text-sm text-slate-500 leading-snug">
+                <li key={i} className="text-sm leading-snug text-ink-500">
                   {ex.replace("—", "→")}
                 </li>
               ))}
@@ -105,7 +101,7 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
 
           {card.jlptLevel && (
             <div className="mt-5">
-              <span className="text-xs font-semibold bg-indigo-50 text-indigo-600 px-2.5 py-0.5 rounded-full">
+              <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-500">
                 JLPT {card.jlptLevel}
               </span>
             </div>
@@ -117,10 +113,10 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
       {!revealed ? (
         <button
           onClick={onReveal}
-          className="w-full py-4 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-700 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+          className="w-full rounded-2xl bg-indigo-500 py-4 font-semibold text-paper transition hover:bg-indigo-600 active:scale-[0.99] cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-200"
         >
           Show Answer
-          <span className="ml-2 text-sm text-slate-400 font-normal">[Space]</span>
+          <span className="ml-2 text-sm font-normal text-indigo-100">[Space]</span>
         </button>
       ) : (
         <RatingButtons onRate={onRate} disabled={submitting} />
@@ -128,8 +124,8 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
 
       {/* Keyboard hint */}
       {!revealed && (
-        <p className="text-center text-xs text-slate-300">
-          Press <kbd className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-xs">Space</kbd> to reveal
+        <p className="text-center text-xs text-ink-400">
+          Press <kbd className="rounded bg-paper px-1.5 py-0.5 text-xs text-ink-500">Space</kbd> to reveal
         </p>
       )}
     </div>

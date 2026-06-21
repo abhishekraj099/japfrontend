@@ -67,9 +67,9 @@ export function ReviewPage() {
   if (sessionState === "loading") {
     return (
       <div className="max-w-xl mx-auto mt-20 space-y-6 animate-pulse">
-        <div className="h-4 bg-slate-100 rounded w-full" />
-        <div className="bg-white border border-slate-200 rounded-2xl h-64" />
-        <div className="h-12 bg-slate-100 rounded-xl" />
+        <div className="h-4 bg-line rounded-full w-full" />
+        <div className="paper-card h-64" />
+        <div className="h-12 bg-line rounded-xl" />
       </div>
     );
   }
@@ -79,18 +79,18 @@ export function ReviewPage() {
     return (
       <div className="max-w-xl mx-auto mt-20 text-center space-y-4">
         <div className="text-4xl">⚠️</div>
-        <h2 className="text-xl font-semibold text-slate-800">Failed to load cards</h2>
-        <p className="text-slate-500 text-sm">Check your connection and try again.</p>
+        <h2 className="font-display text-2xl text-ink-900">Failed to load cards</h2>
+        <p className="text-ink-500 text-sm">Check your connection and try again.</p>
         <div className="flex justify-center gap-3">
           <button
             onClick={() => refetch()}
-            className="px-5 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-700 transition cursor-pointer"
+            className="px-5 py-2.5 bg-indigo-500 text-paper text-sm font-semibold rounded-xl hover:bg-indigo-600 transition cursor-pointer"
           >
             Try Again
           </button>
           <button
             onClick={() => navigate(ROUTES.DASHBOARD)}
-            className="px-5 py-2.5 border border-slate-300 text-sm rounded-lg hover:bg-slate-50 transition cursor-pointer"
+            className="px-5 py-2.5 border border-line text-sm rounded-xl text-ink-700 hover:bg-paper transition cursor-pointer"
           >
             Back to Dashboard
           </button>
@@ -103,14 +103,14 @@ export function ReviewPage() {
   if (sessionState === "empty") {
     return (
       <div className="max-w-xl mx-auto mt-20 text-center space-y-4">
-        <div className="text-5xl">✅</div>
-        <h2 className="text-2xl font-bold text-slate-800">You're all caught up!</h2>
-        <p className="text-slate-500 text-sm">
+        <div className="text-5xl">🌸</div>
+        <h2 className="font-display text-3xl text-ink-900">You're all caught up!</h2>
+        <p className="text-ink-500 text-sm">
           No cards are due for review right now. Come back later!
         </p>
         <button
           onClick={() => navigate(ROUTES.DASHBOARD)}
-          className="mt-2 px-6 py-3 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-700 transition cursor-pointer"
+          className="mt-2 px-6 py-3 bg-indigo-500 text-paper text-sm font-semibold rounded-xl hover:bg-indigo-600 transition cursor-pointer"
         >
           Back to Dashboard
         </button>
@@ -123,19 +123,17 @@ export function ReviewPage() {
     return (
       <div className="max-w-xl mx-auto mt-20 text-center space-y-5">
         <div className="text-5xl">🎉</div>
-        <h2 className="text-2xl font-bold text-slate-800">Session Complete!</h2>
-        <p className="text-slate-500 text-sm">
+        <h2 className="font-display text-3xl text-ink-900">Session complete!</h2>
+        <p className="text-ink-500 text-sm">
           You reviewed{" "}
-          <span className="font-semibold text-slate-700">{reviewed}</span>{" "}
+          <span className="font-semibold text-ink-900">{reviewed}</span>{" "}
           {reviewed === 1 ? "card" : "cards"} in this session.
         </p>
-        <div className="bg-white border border-slate-200 rounded-xl p-5 text-left">
-          <p className="text-xs text-slate-400 uppercase font-semibold tracking-wide mb-3">
-            Session Summary
-          </p>
+        <div className="paper-card p-5 text-left">
+          <p className="section-label mb-3">Session Summary</p>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-600">Cards reviewed</span>
-            <span className="font-semibold text-slate-900">{reviewed}</span>
+            <span className="text-ink-500">Cards reviewed</span>
+            <span className="font-semibold text-ink-900">{reviewed}</span>
           </div>
         </div>
         <div className="flex justify-center gap-3">
@@ -145,13 +143,13 @@ export function ReviewPage() {
               setReviewed(0);
               refetch();
             }}
-            className="px-5 py-2.5 border border-slate-300 text-sm rounded-lg hover:bg-slate-50 transition cursor-pointer"
+            className="px-5 py-2.5 border border-line text-sm rounded-xl text-ink-700 hover:bg-paper transition cursor-pointer"
           >
             Review Again
           </button>
           <button
             onClick={() => navigate(ROUTES.DASHBOARD)}
-            className="px-5 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-700 transition cursor-pointer"
+            className="px-5 py-2.5 bg-indigo-500 text-paper text-sm font-semibold rounded-xl hover:bg-indigo-600 transition cursor-pointer"
           >
             Back to Dashboard
           </button>
@@ -169,11 +167,11 @@ export function ReviewPage() {
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate(ROUTES.DASHBOARD)}
-          className="text-sm text-slate-400 hover:text-slate-700 transition cursor-pointer"
+          className="text-sm text-ink-400 hover:text-ink-900 transition cursor-pointer"
         >
           ← Exit
         </button>
-        <span className="text-xs text-slate-400">
+        <span className="section-label">
           {submitting ? "Saving…" : "Review Session"}
         </span>
       </div>
@@ -192,12 +190,12 @@ export function ReviewPage() {
 
       {/* Keyboard legend */}
       {revealed && (
-        <p className="text-center text-xs text-slate-300">
+        <p className="text-center text-xs text-ink-400">
           Keyboard:{" "}
-          <kbd className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-xs">1</kbd> Again &nbsp;
-          <kbd className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-xs">2</kbd> Hard &nbsp;
-          <kbd className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-xs">3</kbd> Good &nbsp;
-          <kbd className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-xs">4</kbd> Easy
+          <kbd className="bg-paper text-ink-500 px-1.5 py-0.5 rounded text-xs">1</kbd> Again &nbsp;
+          <kbd className="bg-paper text-ink-500 px-1.5 py-0.5 rounded text-xs">2</kbd> Hard &nbsp;
+          <kbd className="bg-paper text-ink-500 px-1.5 py-0.5 rounded text-xs">3</kbd> Good &nbsp;
+          <kbd className="bg-paper text-ink-500 px-1.5 py-0.5 rounded text-xs">4</kbd> Easy
         </p>
       )}
     </div>

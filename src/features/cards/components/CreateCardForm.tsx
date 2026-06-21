@@ -44,20 +44,20 @@ export function CreateCardForm({ deckId, onClose }: Props) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {errorMessage && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
+        <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">
           {errorMessage}
         </div>
       )}
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="question">
+        <label className="text-sm font-medium text-ink-700" htmlFor="question">
           Question <span className="text-red-500">*</span>
         </label>
         <textarea
           id="question"
           rows={2}
           placeholder="e.g. 犬"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition resize-none"
+          className="w-full px-3 py-2 border border-line rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition resize-none"
           {...register("question")}
         />
         {errors.question && (
@@ -66,14 +66,14 @@ export function CreateCardForm({ deckId, onClose }: Props) {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="answer">
+        <label className="text-sm font-medium text-ink-700" htmlFor="answer">
           Answer <span className="text-red-500">*</span>
         </label>
         <textarea
           id="answer"
           rows={2}
           placeholder="e.g. Dog"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition resize-none"
+          className="w-full px-3 py-2 border border-line rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition resize-none"
           {...register("answer")}
         />
         {errors.answer && (
@@ -83,24 +83,24 @@ export function CreateCardForm({ deckId, onClose }: Props) {
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="reading">
-            Reading <span className="text-slate-400 font-normal">(furigana)</span>
+          <label className="text-sm font-medium text-ink-700" htmlFor="reading">
+            Reading <span className="text-ink-400 font-normal">(furigana)</span>
           </label>
           <input
             id="reading"
             type="text"
             placeholder="e.g. いぬ"
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+            className="w-full px-3 py-2 border border-line rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition"
             {...register("reading")}
           />
         </div>
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="jlptLevel">
+          <label className="text-sm font-medium text-ink-700" htmlFor="jlptLevel">
             JLPT Level
           </label>
           <select
             id="jlptLevel"
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition bg-white"
+            className="w-full px-3 py-2 border border-line rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition bg-card"
             {...register("jlptLevel")}
           >
             <option value="">—</option>
@@ -114,54 +114,54 @@ export function CreateCardForm({ deckId, onClose }: Props) {
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="pitchAccent">
-          Pitch accent <span className="text-slate-400 font-normal">(optional)</span>
+        <label className="text-sm font-medium text-ink-700" htmlFor="pitchAccent">
+          Pitch accent <span className="text-ink-400 font-normal">(optional)</span>
         </label>
         <input
           id="pitchAccent"
           type="text"
           placeholder="e.g. ② or 1"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+          className="w-full px-3 py-2 border border-line rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition"
           {...register("pitchAccent")}
         />
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="contextSentence">
+        <label className="text-sm font-medium text-ink-700" htmlFor="contextSentence">
           Example sentence
         </label>
         <textarea
           id="contextSentence"
           rows={2}
           placeholder="A sentence using this word…"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition resize-none"
+          className="w-full px-3 py-2 border border-line rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition resize-none"
           {...register("contextSentence")}
         />
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="grammarNotes">
+        <label className="text-sm font-medium text-ink-700" htmlFor="grammarNotes">
           Grammar notes
         </label>
         <textarea
           id="grammarNotes"
           rows={2}
           placeholder="Conjugation, usage notes…"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition resize-none"
+          className="w-full px-3 py-2 border border-line rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition resize-none"
           {...register("grammarNotes")}
         />
       </div>
 
       <div className="space-y-1">
-        <label className="text-sm font-medium text-slate-700" htmlFor="tags">
+        <label className="text-sm font-medium text-ink-700" htmlFor="tags">
           Tags
-          <span className="text-slate-400 font-normal ml-1">(comma separated)</span>
+          <span className="text-ink-400 font-normal ml-1">(comma separated)</span>
         </label>
         <input
           id="tags"
           type="text"
           placeholder="e.g. animal, N5, noun"
-          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+          className="w-full px-3 py-2 border border-line rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent transition"
           {...register("tags")}
         />
       </div>
@@ -170,14 +170,14 @@ export function CreateCardForm({ deckId, onClose }: Props) {
         <button
           type="button"
           onClick={onClose}
-          className="flex-1 px-4 py-2 text-sm border border-slate-300 rounded-lg hover:bg-slate-50 transition cursor-pointer"
+          className="flex-1 px-4 py-2 text-sm border border-line rounded-xl hover:bg-paper transition cursor-pointer"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 px-4 py-2 text-sm bg-slate-900 text-white rounded-lg hover:bg-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="flex-1 px-4 py-2 text-sm bg-indigo-500 text-paper rounded-xl hover:bg-indigo-600 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {isPending ? "Adding…" : "Add Card"}
         </button>

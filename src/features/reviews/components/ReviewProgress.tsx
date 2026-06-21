@@ -9,15 +9,15 @@ export function ReviewProgress({ current, total }: Props) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between text-sm">
-        <span className="text-slate-500">
-          Card <span className="font-semibold text-slate-700">{current}</span> of{" "}
-          <span className="font-semibold text-slate-700">{total}</span>
+        <span className="text-ink-500">
+          Card <span className="font-semibold text-ink-900">{current}</span> of{" "}
+          <span className="font-semibold text-ink-900">{total}</span>
         </span>
-        <span className="text-slate-400">{percent}%</span>
+        <span className="text-ink-400">{percent}%</span>
       </div>
-      <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+      <div className="h-1.5 overflow-hidden rounded-full bg-line">
         <div
-          className="h-full bg-slate-900 rounded-full transition-all duration-500"
+          className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-sakura-500 transition-all duration-500"
           style={{ width: `${percent}%` }}
         />
       </div>
