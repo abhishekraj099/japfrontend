@@ -11,6 +11,7 @@ import { ReviewPage } from "@/pages/ReviewPage";
 import { DictionaryPage } from "@/pages/DictionaryPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { OnboardingPage, ONBOARDED_KEY } from "@/pages/OnboardingPage";
+import { IntegrationsPage } from "@/pages/IntegrationsPage";
 
 function HomeRedirect() {
   const onboarded =
@@ -51,6 +52,7 @@ export const router = createBrowserRouter([
           { path: "/decks/:deckId", element: <DeckDetailPage /> },
           { path: ROUTES.REVIEW, element: <ReviewPage /> },
           { path: ROUTES.DICTIONARY, element: <DictionaryPage /> },
+          { path: ROUTES.INTEGRATIONS, element: <IntegrationsPage /> },
         ],
       },
     ],

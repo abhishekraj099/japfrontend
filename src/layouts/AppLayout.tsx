@@ -1,12 +1,13 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Layers, GraduationCap, BookOpen } from "lucide-react";
+import { Layers, GraduationCap, BookOpen, Settings } from "lucide-react";
 import { useAuthContext } from "@/providers/AuthProvider";
 import { ROUTES } from "@/constants/routes";
 
 const NAV = [
-  { to: ROUTES.DASHBOARD, label: "Decks", icon: Layers },
-  { to: ROUTES.REVIEW, label: "Review", icon: GraduationCap },
-  { to: ROUTES.DICTIONARY, label: "Dictionary", icon: BookOpen },
+  { to: ROUTES.DASHBOARD, label: "Decks", jp: "札", icon: Layers },
+  { to: ROUTES.REVIEW, label: "Review", jp: "復習", icon: GraduationCap },
+  { to: ROUTES.DICTIONARY, label: "Dictionary", jp: "辞書", icon: BookOpen },
+  { to: ROUTES.INTEGRATIONS, label: "Settings", jp: "設定", icon: Settings },
 ];
 
 function initials(name?: string) {
@@ -25,56 +26,65 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen">
-      <header className="ios-blur sticky top-0 z-20">
-        <div className="mx-auto flex h-[52px] max-w-3xl items-center justify-between px-5">
+      <header className="paper-blur sticky top-0 z-20 border-b border-line/70">
+        <div className="mx-auto flex h-[58px] max-w-3xl items-center justify-between px-5">
           <Link to={ROUTES.DASHBOARD} className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-blue-500 font-jp text-base font-semibold text-white">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500 font-jp text-lg font-medium text-paper">
               語
             </span>
-            <span className="text-[17px] font-bold tracking-tight text-label">JAP</span>
+            <span className="font-display text-[26px] leading-none text-ink-900">
+              JAP
+            </span>
           </Link>
 
           <div className="flex items-center gap-3">
-            <span className="hidden text-[15px] font-medium text-ink-500 sm:inline">
+            <span className="hidden text-sm text-ink-500 sm:inline">
               {user?.name?.split(" ")[0]}
             </span>
             <button
               onClick={handleLogout}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white"
-              title="Account · Log out"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-sakura-400 to-sakura-600 text-xs font-bold text-paper"
+              title="Log out"
             >
               {initials(user?.name)}
             </button>
           </div>
         </div>
-        <div className="hairline h-px" />
       </header>
 
-      <main className="mx-auto max-w-3xl px-5 pb-28 pt-6">
+      <main className="mx-auto max-w-3xl px-5 pb-28 pt-7">
         <Outlet />
       </main>
 
-      {/* iOS tab bar */}
-      <nav className="fixed inset-x-0 bottom-0 z-20">
-        <div className="ios-blur border-t border-black/5">
-          <div className="mx-auto flex max-w-3xl items-stretch justify-around px-2 pb-[max(8px,env(safe-area-inset-bottom))] pt-2">
-            {NAV.map(({ to, label, icon: Icon }) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={to === ROUTES.DASHBOARD}
-                className={({ isActive }) =>
-                  [
-                    "flex flex-1 flex-col items-center gap-1 rounded-xl py-1.5 transition",
-                    isActive ? "text-blue-500" : "text-ink-400",
-                  ].join(" ")
-                }
-              >
-                <Icon className="h-[22px] w-[22px]" strokeWidth={2} />
-                <span className="text-[11px] font-medium">{label}</span>
-              </NavLink>
-            ))}
-          </div>
+      {/* floating bottom nav */}
+      <nav className="fixed inset-x-0 bottom-0 z-20 flex justify-center px-4 pb-[max(16px,env(safe-area-inset-bottom))]">
+        <div className="paper-blur flex items-center gap-1 rounded-full border border-line p-1.5 shadow-[0_12px_36px_-12px_rgba(40,54,101,0.4)]">
+          {NAV.map(({ to, label, jp, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={to === ROUTES.DASHBOARD}
+              className={({ isActive }) =>
+                [
+                  "flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition",
+                  isActive
+                    ? "bg-indigo-500 text-paper shadow-md"
+                    : "text-ink-500 hover:bg-indigo-50",
+                ].join(" ")
+              }
+            >
+              {({ isActive }) =>
+                isActive ? (
+                  <>
+                    <span className="font-jp text-sm text-sakura-300">{jp}</span>
+                    {label}
+                  </>
+                ) : (
+                  <Icon className="h-5 w-5" strokeWidth={2} />
+                )
+              }
+            </NavLink>
+          ))}
         </div>
       </nav>
     </div>

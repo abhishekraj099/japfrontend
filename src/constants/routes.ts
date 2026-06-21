@@ -7,4 +7,5 @@ export const ROUTES = {
   DECK: (id: string) => `/decks/${id}`,
   REVIEW: "/review",
   DICTIONARY: "/dictionary",
+  INTEGRATIONS: "/settings/integrations",
 } as const;

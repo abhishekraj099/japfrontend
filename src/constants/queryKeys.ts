@@ -6,4 +6,5 @@ export const QUERY_KEYS = {
   DUE_CARDS: ["reviews", "due"] as const,
   REVIEWS: ["reviews"] as const,
   DICTIONARY: (q: string) => ["dictionary", q] as const,
+  INTEGRATIONS: ["integrations"] as const,
 };
