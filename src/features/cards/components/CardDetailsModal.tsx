@@ -120,6 +120,39 @@ export function CardDetailsModal({ card, onClose }: Props) {
             </Field>
           )}
 
+          {/* Combined-card example section (Phase 18C). */}
+          {card.exampleSentence && (
+            <Field label="Example sentence">
+              <p className="font-jp text-sm text-ink-700 leading-snug">
+                {card.exampleSentence}
+              </p>
+              {card.exampleReading && (
+                <p className="text-xs text-ink-400 leading-snug">{card.exampleReading}</p>
+              )}
+              {card.exampleTranslation && (
+                <p className="text-sm text-ink-500 leading-snug">{card.exampleTranslation}</p>
+              )}
+              {card.extractionSource && (
+                <p className="mt-1 text-[10px] uppercase tracking-wide text-ink-300">
+                  source: {card.extractionSource}
+                </p>
+              )}
+            </Field>
+          )}
+
+          {card.sourceUrl && (
+            <Field label="Source">
+              <a
+                href={card.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm text-indigo-500 underline break-all"
+              >
+                {card.pageTitle || card.sourceUrl}
+              </a>
+            </Field>
+          )}
+
           {card.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {card.tags.map((tag) => (

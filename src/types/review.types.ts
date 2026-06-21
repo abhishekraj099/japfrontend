@@ -25,6 +25,9 @@ export interface DueCard {
   jlptLevel: JlptLevel | null;
   pitchAccent: string | null;
   examples: string[];
+  exampleSentence: string | null;
+  exampleReading: string | null;
+  exampleTranslation: string | null;
   deckId: string;
   schedule: {
     dueDate: string;

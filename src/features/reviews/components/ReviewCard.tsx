@@ -17,6 +17,8 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
   const frontLabel = isSentence ? "Sentence" : isGrammar ? "Pattern" : "Question";
   const backLabel = isSentence ? "Translation" : isGrammar ? "Meaning" : "Answer";
   const showExamples = (isGrammar || isSentence) && card.examples.length > 0;
+  // Combined card (Phase 18C): a vocab card carrying an example sentence.
+  const isCombined = !isGrammar && !isSentence && !!card.exampleSentence;
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -87,6 +89,24 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
 
           {isSentence && card.reading && (
             <p className="font-jp mt-2 text-sm text-ink-500">{card.reading}</p>
+          )}
+
+          {isCombined && (
+            <div className="mx-auto mt-5 max-w-sm space-y-1 text-left">
+              {card.reading && (
+                <p className="font-jp text-sm text-ink-500">{card.reading}</p>
+              )}
+              <p className="section-label mt-3">Example</p>
+              <p className="font-jp text-sm leading-snug text-ink-700">
+                {card.exampleSentence}
+              </p>
+              {card.exampleReading && (
+                <p className="font-jp text-xs text-ink-400">{card.exampleReading}</p>
+              )}
+              {card.exampleTranslation && (
+                <p className="text-sm text-ink-500">{card.exampleTranslation}</p>
+              )}
+            </div>
           )}
 
           {showExamples && (

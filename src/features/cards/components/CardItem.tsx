@@ -109,6 +109,22 @@ export function CardItem({ card, deckId }: Props) {
             </div>
           )}
 
+          {/* Combined-card example preview (Phase 18C). */}
+          {card.exampleSentence && (
+            <div className="mt-3">
+              <p className="text-xs font-medium text-ink-400 uppercase tracking-wide mb-1">
+                Example
+              </p>
+              <p className="text-sm text-ink-700 leading-snug">{card.exampleSentence}</p>
+              {card.exampleReading && (
+                <p className="text-xs text-ink-400 leading-snug">{card.exampleReading}</p>
+              )}
+              {card.exampleTranslation && (
+                <p className="text-sm text-ink-500 leading-snug">{card.exampleTranslation}</p>
+              )}
+            </div>
+          )}
+
           {card.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-3">
               {card.tags.map((tag) => (
@@ -126,7 +142,7 @@ export function CardItem({ card, deckId }: Props) {
 
       {/* Actions */}
       <div className="flex items-center gap-1 px-4 py-2 border-t border-line bg-paper">
-        {(isGrammar || isSentence) && (
+        {(isGrammar || isSentence || card.exampleSentence || card.sourceUrl) && (
           <button
             onClick={() => setShowDetails(true)}
             className="text-xs text-ink-500 hover:text-ink-900 px-3 py-1.5 rounded-lg hover:bg-card transition cursor-pointer"

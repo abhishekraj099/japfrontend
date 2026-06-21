@@ -20,6 +20,12 @@ export interface Card {
   sourceType: string | null;
   sourceUrl: string | null;
   contextSentence: string | null;
+  // Combined-card fields (Phase 18C) — an example attached to a vocab card.
+  exampleSentence: string | null;
+  exampleReading: string | null;
+  exampleTranslation: string | null;
+  pageTitle: string | null;
+  extractionSource: string | null;
   deckId: string;
   createdAt: string;
   updatedAt: string;
@@ -39,6 +45,11 @@ export interface CreateCardInput {
   sourceType?: string;
   sourceUrl?: string;
   contextSentence?: string;
+  exampleSentence?: string;
+  exampleReading?: string;
+  exampleTranslation?: string;
+  pageTitle?: string;
+  extractionSource?: string;
 }
 
 export interface UpdateCardInput {
@@ -55,4 +66,7 @@ export interface UpdateCardInput {
   sourceUrl?: string;
   contextSentence?: string;
   examples?: string[];
+  exampleSentence?: string;
+  exampleReading?: string;
+  exampleTranslation?: string;
 }
