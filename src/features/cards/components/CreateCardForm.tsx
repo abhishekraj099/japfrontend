@@ -35,6 +35,7 @@ export function CreateCardForm({ deckId, onClose }: Props) {
       tags: parseTags(data.tags),
       reading: data.reading || undefined,
       jlptLevel: data.jlptLevel ? data.jlptLevel : undefined,
+      pitchAccent: data.pitchAccent || undefined,
       contextSentence: data.contextSentence || undefined,
       grammarNotes: data.grammarNotes || undefined,
     });
@@ -110,6 +111,19 @@ export function CreateCardForm({ deckId, onClose }: Props) {
             <option value="N1">N1</option>
           </select>
         </div>
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-sm font-medium text-slate-700" htmlFor="pitchAccent">
+          Pitch accent <span className="text-slate-400 font-normal">(optional)</span>
+        </label>
+        <input
+          id="pitchAccent"
+          type="text"
+          placeholder="e.g. ② or 1"
+          className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition"
+          {...register("pitchAccent")}
+        />
       </div>
 
       <div className="space-y-1">

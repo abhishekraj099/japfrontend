@@ -41,6 +41,7 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
       question: card.question,
       answer: card.answer,
       reading: card.reading ?? "",
+      pitchAccent: card.pitchAccent ?? "",
       jlptLevel: card.jlptLevel ?? "",
       contextSentence: card.contextSentence ?? "",
       grammarNotes: card.grammarNotes ?? "",
@@ -77,6 +78,7 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
       payload.jlptLevel = data.jlptLevel ? data.jlptLevel : undefined;
       payload.grammarNotes = data.grammarNotes || undefined;
       payload.reading = data.reading || undefined;
+      payload.pitchAccent = data.pitchAccent || undefined;
       payload.contextSentence = data.contextSentence || undefined;
     }
 
@@ -152,6 +154,22 @@ export function EditCardForm({ card, deckId, onClose }: Props) {
             </div>
           )}
       </div>
+
+      {/* Pitch accent — vocabulary cards only. Optional metadata. */}
+      {!isGrammar && !isSentence && (
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-slate-700" htmlFor="edit-pitchAccent">
+            Pitch accent <span className="text-slate-400 font-normal">(optional)</span>
+          </label>
+          <input
+            id="edit-pitchAccent"
+            type="text"
+            placeholder="e.g. ② or 1"
+            className={inputCls}
+            {...register("pitchAccent")}
+          />
+        </div>
+      )}
 
       {!isSentence && (
         <div className="space-y-1">

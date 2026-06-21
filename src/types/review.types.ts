@@ -23,6 +23,7 @@ export interface DueCard {
   tags: string[];
   reading: string | null;
   jlptLevel: JlptLevel | null;
+  pitchAccent: string | null;
   examples: string[];
   deckId: string;
   schedule: {

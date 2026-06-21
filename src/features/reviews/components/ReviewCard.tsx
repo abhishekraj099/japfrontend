@@ -54,6 +54,14 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
           <p className="text-3xl font-bold text-slate-900 leading-snug break-words">
             {card.question}
           </p>
+          {!isGrammar && !isSentence && card.reading && (
+            <p className="text-lg text-slate-400 mt-2">{card.reading}</p>
+          )}
+          {!isGrammar && !isSentence && card.pitchAccent && (
+            <p className="text-lg font-semibold text-pink-600 mt-1">
+              [{card.pitchAccent}]
+            </p>
+          )}
           {card.tags.length > 0 && (
             <div className="flex flex-wrap justify-center gap-1.5 mt-4">
               {card.tags.map((tag) => (

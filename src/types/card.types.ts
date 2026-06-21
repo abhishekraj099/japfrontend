@@ -14,6 +14,7 @@ export interface Card {
   grammarNotes: string | null;
   jlptLevel: JlptLevel | null;
   frequency: number | null;
+  pitchAccent: string | null;
   patternId: string | null;
   examples: string[];
   sourceType: string | null;
@@ -34,6 +35,7 @@ export interface CreateCardInput {
   grammarNotes?: string;
   jlptLevel?: JlptLevel;
   frequency?: number;
+  pitchAccent?: string;
   sourceType?: string;
   sourceUrl?: string;
   contextSentence?: string;
@@ -48,6 +50,7 @@ export interface UpdateCardInput {
   grammarNotes?: string;
   jlptLevel?: JlptLevel;
   frequency?: number;
+  pitchAccent?: string;
   sourceType?: string;
   sourceUrl?: string;
   contextSentence?: string;

@@ -33,6 +33,7 @@ export function useCreateCard(deckId: string, onSuccess?: () => void) {
           grammarNotes: newCard.grammarNotes ?? null,
           jlptLevel: newCard.jlptLevel ?? null,
           frequency: newCard.frequency ?? null,
+          pitchAccent: newCard.pitchAccent ?? null,
           patternId: null,
           examples: [],
           sourceType: newCard.sourceType ?? null,

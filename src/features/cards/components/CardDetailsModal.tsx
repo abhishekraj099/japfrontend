@@ -84,6 +84,14 @@ export function CardDetailsModal({ card, onClose }: Props) {
             </p>
           </Field>
 
+          {!isGrammar && !isSentence && card.pitchAccent && (
+            <Field label="Pitch accent">
+              <p className="text-sm font-semibold text-pink-600">
+                [{card.pitchAccent}]
+              </p>
+            </Field>
+          )}
+
           {card.grammarNotes && (
             <Field label="Grammar notes">
               <p className="text-sm text-slate-600 leading-snug whitespace-pre-line">

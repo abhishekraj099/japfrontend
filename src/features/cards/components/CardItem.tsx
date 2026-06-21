@@ -45,6 +45,11 @@ export function CardItem({ card, deckId }: Props) {
           {card.reading && (
             <p className="text-sm text-slate-400 mt-0.5">{card.reading}</p>
           )}
+          {!isGrammar && !isSentence && card.pitchAccent && (
+            <p className="text-sm font-semibold text-pink-600 mt-0.5">
+              [{card.pitchAccent}]
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <CardTypeBadge cardType={card.cardType} />
