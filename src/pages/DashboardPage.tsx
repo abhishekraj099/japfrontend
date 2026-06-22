@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Plus, ArrowUpRight, Flame, Layers } from "lucide-react";
-import { ProgressRing } from "@/components/common/ProgressRing";
-import { DEFAULT_REVIEW_LIMIT } from "@/constants/app";
+import { Plus, ArrowUpRight, Flame, Layers, GraduationCap } from "lucide-react";
 import { useDecks } from "@/features/decks/hooks/useDecks";
 import { DeckList } from "@/features/decks/components/DeckList";
 import { CreateDeckForm } from "@/features/decks/components/CreateDeckForm";
@@ -11,8 +9,32 @@ import { useAuthContext } from "@/providers/AuthProvider";
 import { ROUTES } from "@/constants/routes";
 import { Mascot, Onigiri, Lantern, Torii, KStar } from "@/components/common/Kawaii";
 import { AnimeScene } from "@/components/common/AnimeScene";
-import { photoFor } from "@/components/common/MediaCard";
 import { AudioButton } from "@/components/common/AudioButton";
+import { Reveal } from "@/components/common/Reveal";
+
+function HeroStat({
+  icon: Icon,
+  tint,
+  value,
+  label,
+}: {
+  icon: typeof Flame;
+  tint: string;
+  value: React.ReactNode;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className={`flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ${tint}`}>
+        <Icon className="h-[18px] w-[18px]" />
+      </span>
+      <div>
+        <p className="font-display text-xl leading-none text-white">{value}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-white/55">{label}</p>
+      </div>
+    </div>
+  );
+}
 
 function dayOfYear() {
   const now = new Date();
@@ -86,36 +108,48 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* ── scene hero banner (clean) ── */}
-      <div className="relative overflow-hidden rounded-[1.8rem] shadow-[0_24px_60px_-28px_rgba(0,0,0,0.7)]">
+      {/* ── premium scene hero with integrated glass stats ── */}
+      <Reveal className="relative overflow-hidden rounded-[2rem] shadow-[0_30px_70px_-30px_rgba(0,0,0,0.85)] ring-1 ring-white/10">
         <AnimeScene className="absolute inset-0 h-full w-full" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#150a36]/90 via-[#150a36]/55 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#150a36]/80 to-transparent" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(130% 110% at 110% -10%, transparent 30%, rgba(14,8,40,0.55)), linear-gradient(to top, rgba(14,8,40,0.95) 6%, rgba(14,8,40,0.25) 55%, transparent)",
+          }}
+        />
 
-        <div className="relative flex min-h-[280px] flex-col justify-between p-7 sm:p-8">
+        <div className="relative flex min-h-[360px] flex-col justify-between p-7 sm:p-9">
+          {/* top */}
           <div className="flex items-start justify-between">
-            <p className="font-jp text-sm tracking-[0.24em] text-sakura-300">{g.jp}</p>
+            <div>
+              <p className="font-jp text-sm tracking-[0.26em] text-sakura-300">{g.jp}</p>
+              <h1 className="font-display mt-1.5 text-4xl font-extrabold leading-[1.04] text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.4)] sm:text-[44px]">
+                {g.en}
+                {user?.name ? <>, {user.name.split(" ")[0]}</> : ""}
+              </h1>
+            </div>
             <button
               onClick={() => setShowCreate(true)}
-              className="flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-bold text-white backdrop-blur transition hover:bg-white/25 active:scale-95"
+              className="flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-bold text-white ring-1 ring-white/20 backdrop-blur transition hover:bg-white/25 active:scale-95"
             >
               <Plus className="h-4 w-4" /> <span className="hidden sm:inline">New deck</span>
             </button>
           </div>
 
-          <div className="max-w-md">
-            <h1 className="font-display text-4xl font-extrabold leading-[1.05] text-white sm:text-[42px]">
-              {g.en}
-              {user?.name ? <>, {user.name.split(" ")[0]}</> : ""}
-            </h1>
-            <p className="mt-2.5 text-[15px] text-white/75">
-              {dueCount > 0
-                ? `${dueCount} card${dueCount === 1 ? "" : "s"} are ready for review today.`
-                : "You're all caught up — explore your decks below."}
-            </p>
+          {/* bottom: glass stats strip + CTA */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="inline-flex items-center gap-5 self-start rounded-2xl border border-white/15 bg-white/[0.08] px-5 py-3 backdrop-blur-md">
+              <HeroStat icon={Flame} tint="text-[#ffb454]" value={streak} label="streak" />
+              <span className="h-9 w-px bg-white/15" />
+              <HeroStat icon={GraduationCap} tint="text-[#1ad3b0]" value={dueCount} label="due" />
+              <span className="h-9 w-px bg-white/15" />
+              <HeroStat icon={Layers} tint="text-[#a99bff]" value={deckCount} label="decks" />
+            </div>
+
             <Link
               to={ROUTES.REVIEW}
-              className="group mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-extrabold text-[#d6406a] shadow-lg transition hover:scale-[1.03]"
+              className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-extrabold text-[#d6406a] shadow-xl transition hover:scale-[1.03]"
             >
               <span className="font-jp">復習</span>
               {dueCount > 0 ? "Begin review" : "Practice freely"}
@@ -123,94 +157,43 @@ export function DashboardPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </Reveal>
 
-      {/* ── modern stats bento ── */}
-      <div className="grid grid-cols-3 gap-3 sm:gap-4">
-        {/* streak */}
-        <div className="paper-card tap holo-hover relative flex items-center gap-3 overflow-hidden p-4">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ff8a4c] to-[#ff4d6a] text-white shadow-lg">
-            <Flame className="h-6 w-6" />
-          </span>
-          <div className="min-w-0">
-            <p className="font-display text-2xl leading-none text-ink-900">{streak}</p>
-            <p className="mt-1 truncate text-xs font-semibold text-ink-400">day streak</p>
+      {/* ── Today: kanji + proverb (refined) ── */}
+      <Reveal delay={80} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        {/* kanji of the day */}
+        <div className="paper-card overflow-hidden">
+          <div className="relative flex h-28 items-center justify-center bg-gradient-to-br from-indigo-500 via-[#6a4bd6] to-[#7c5cff]">
+            <span className="font-jp text-6xl font-bold text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
+              {kanji.k}
+            </span>
+            <span className="absolute right-3 top-3">
+              <AudioButton text={kanji.k} className="text-white/80 hover:text-white" />
+            </span>
+            <Onigiri className="pointer-events-none absolute -left-3 -bottom-4 h-16 w-16 rotate-12 opacity-90" />
           </div>
-        </div>
-
-        {/* due today with ring */}
-        <Link to={ROUTES.REVIEW} className="paper-card tap holo-hover relative flex items-center gap-3 overflow-hidden p-4">
-          <ProgressRing
-            value={dueCount > 0 ? Math.min(1, dueCount / DEFAULT_REVIEW_LIMIT) : 1}
-            size={48}
-            stroke={6}
-            from="#1ad3b0"
-            to="#5bd1ff"
-          >
-            <span className="font-display text-sm font-bold text-ink-900">{dueCount}</span>
-          </ProgressRing>
-          <div className="min-w-0">
-            <p className="font-display text-2xl leading-none text-ink-900">{dueCount}</p>
-            <p className="mt-1 truncate text-xs font-semibold text-ink-400">due today</p>
-          </div>
-        </Link>
-
-        {/* decks */}
-        <div className="paper-card tap holo-hover relative flex items-center gap-3 overflow-hidden p-4">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#7c5cff] to-[#5bd1ff] text-white shadow-lg">
-            <Layers className="h-6 w-6" />
-          </span>
-          <div className="min-w-0">
-            <p className="font-display text-2xl leading-none text-ink-900">{deckCount}</p>
-            <p className="mt-1 truncate text-xs font-semibold text-ink-400">
-              deck{deckCount === 1 ? "" : "s"}
+          <div className="p-5">
+            <p className="section-label text-indigo-400">漢字 · Kanji of the day</p>
+            <p className="font-display mt-1.5 text-2xl capitalize text-ink-900">{kanji.meaning}</p>
+            <p className="font-jp mt-1 text-[15px] text-ink-500">
+              訓 {kanji.kun} ・ 音 {kanji.on}
             </p>
           </div>
         </div>
-      </div>
 
-      {/* Kanji + proverb */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-5">
-        <div className="paper-card relative overflow-hidden sm:col-span-3">
-          <Onigiri className="pointer-events-none absolute right-3 top-3 z-10 h-14 w-14 rotate-12 opacity-90" />
-          <div className="flex flex-col sm:flex-row">
-            {/* real themed photo */}
-            <div className="relative h-32 w-full shrink-0 sm:h-auto sm:w-40">
-              <img
-                src={photoFor(kanji.meaning, 400, 400)}
-                alt={kanji.meaning}
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-              <span className="font-jp absolute bottom-2 left-2 rounded-xl bg-black/45 px-2.5 py-1 text-3xl font-bold text-white backdrop-blur-sm">
-                {kanji.k}
-              </span>
-            </div>
-            {/* details */}
-            <div className="flex-1 p-6">
-              <p className="section-label text-sakura-500">Kanji of the day</p>
-              <div className="mt-2 flex items-center gap-2">
-                <p className="font-display text-2xl capitalize text-indigo-500">{kanji.meaning}</p>
-                <AudioButton text={kanji.k} className="text-ink-400 hover:text-indigo-400" />
-              </div>
-              <p className="font-jp mt-1 text-[15px] text-ink-500">
-                訓 {kanji.kun} ・ 音 {kanji.on}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="paper-card relative overflow-hidden sm:col-span-2 flex flex-col justify-between p-6">
-          <Lantern className="pointer-events-none absolute -right-2 bottom-2 h-20 w-20 opacity-90" />
-          <p className="section-label text-sakura-500">Today's proverb</p>
-          <div className="relative mt-3">
-            <p className="font-jp text-xl leading-snug text-ink-900">{proverb.jp}</p>
+        {/* proverb of the day */}
+        <div className="paper-card relative flex flex-col justify-between overflow-hidden p-6">
+          <Lantern className="pointer-events-none absolute -right-3 -bottom-3 h-20 w-20 opacity-90" />
+          <p className="section-label text-sakura-500">諺 · Proverb of the day</p>
+          <div className="relative mt-4">
+            <span className="font-display absolute -left-1 -top-6 text-5xl text-sakura-500/30">“</span>
+            <p className="font-jp text-2xl leading-snug text-ink-900">{proverb.jp}</p>
             <p className="font-display mt-2 text-lg italic leading-snug text-ink-500">
               {proverb.en}
             </p>
           </div>
         </div>
-      </div>
+      </Reveal>
 
       {/* Create panel */}
       {showCreate && (

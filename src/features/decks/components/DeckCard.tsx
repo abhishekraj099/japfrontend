@@ -10,13 +10,13 @@ interface Props {
   deck: Deck;
 }
 
-/* stable muted accent per deck, all within the indigo/sakura family */
+/* stable gradient + glyph per deck */
 const THEMES = [
-  { bg: "bg-indigo-500", soft: "bg-indigo-50", text: "text-indigo-500", jp: "語" },
-  { bg: "bg-sakura-500", soft: "bg-sakura-50", text: "text-sakura-600", jp: "学" },
-  { bg: "bg-jade-500", soft: "bg-jade-500/10", text: "text-jade-500", jp: "字" },
-  { bg: "bg-gold-500", soft: "bg-gold-500/12", text: "text-gold-500", jp: "空" },
-  { bg: "bg-indigo-400", soft: "bg-indigo-50", text: "text-indigo-400", jp: "花" },
+  { from: "#6366f1", to: "#7c5cff", soft: "bg-indigo-50", text: "text-indigo-500", jp: "語" },
+  { from: "#ff6a4d", to: "#ff3d8b", soft: "bg-sakura-50", text: "text-sakura-600", jp: "学" },
+  { from: "#1ad3b0", to: "#34c08a", soft: "bg-jade-500/10", text: "text-jade-500", jp: "字" },
+  { from: "#ffb454", to: "#ff6a4d", soft: "bg-gold-500/12", text: "text-gold-500", jp: "空" },
+  { from: "#5bd1ff", to: "#7c5cff", soft: "bg-indigo-50", text: "text-indigo-400", jp: "花" },
 ];
 function themeFor(id: string) {
   let h = 0;
@@ -43,41 +43,44 @@ export function DeckCard({ deck }: Props) {
 
   return (
     <div className="paper-card tap holo-hover group relative flex flex-col overflow-hidden">
-      {/* glowing top accent in the deck's colour */}
-      <span className={`pointer-events-none absolute inset-x-0 top-0 h-1 ${t.bg} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
-      <span aria-hidden className="font-jp pointer-events-none absolute -bottom-8 -right-2 select-none text-[8.5rem] leading-none text-ink-900/[0.04] transition-transform duration-500 group-hover:scale-110">
-        {t.jp}
-      </span>
-
       <button
-        className="relative flex-1 cursor-pointer p-5 text-left"
+        className="block flex-1 cursor-pointer text-left"
         onClick={() => navigate(ROUTES.DECK(deck.id))}
       >
-        <div className="flex items-start justify-between">
-          <span className={`flex h-14 w-14 items-center justify-center rounded-2xl ${t.bg} font-jp text-2xl font-medium text-paper`}>
+        {/* gradient cover */}
+        <div className="relative h-24 overflow-hidden" style={{ background: `linear-gradient(135deg,${t.from},${t.to})` }}>
+          <div className="absolute right-5 top-3 h-10 w-10 rounded-full bg-white/40 blur-[1px]" />
+          <svg className="absolute inset-x-0 bottom-0 w-full" viewBox="0 0 200 50" preserveAspectRatio="none">
+            <path d="M0 38 C 50 18 90 30 130 22 S 200 18 200 30 L200 50 L0 50 Z" fill="rgba(255,255,255,0.2)" />
+            <path d="M0 44 C 60 30 110 40 150 34 S 200 32 200 40 L200 50 L0 50 Z" fill="rgba(255,255,255,0.16)" />
+          </svg>
+          <span className="font-jp absolute inset-0 flex items-center justify-center text-5xl font-bold text-white/90 drop-shadow transition-transform duration-300 group-hover:scale-105">
             {t.jp}
           </span>
-          <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide ${t.soft} ${t.text}`}>
+          <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-bold tracking-wide text-slate-700">
             {deck.language.toUpperCase()}
           </span>
         </div>
 
-        <h3 className="font-display mt-4 text-2xl leading-tight text-ink-900 line-clamp-1">
-          {deck.name}
-        </h3>
-        <p className="mt-1 line-clamp-2 min-h-[2.5rem] text-[15px] text-ink-500">
-          {deck.description || "No description yet."}
-        </p>
-
-        <p className="mt-4 text-xs font-medium text-ink-400">
-          {new Date(deck.createdAt).toLocaleDateString(undefined, {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </p>
+        {/* body */}
+        <div className="p-5">
+          <h3 className="font-display text-xl leading-tight text-ink-900 line-clamp-1">
+            {deck.name}
+          </h3>
+          <p className="mt-1 line-clamp-2 min-h-[2.5rem] text-[15px] text-ink-500">
+            {deck.description || "No description yet."}
+          </p>
+          <p className="mt-3 text-xs font-medium text-ink-400">
+            {new Date(deck.createdAt).toLocaleDateString(undefined, {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
+        </div>
       </button>
 
+      {/* footer */}
       <div className="relative flex items-center justify-between border-t border-line px-3 py-2.5">
         <button
           onClick={() => navigate(ROUTES.DECK(deck.id))}

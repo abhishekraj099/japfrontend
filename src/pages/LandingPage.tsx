@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles as SparkIcon } from "lucide-react";
 import { ROUTES } from "@/constants/routes";
 import { MemoryArt, ProgressArt } from "@/components/common/FeatureArt";
 import { MediaCard } from "@/components/common/MediaCard";
+import { BouncyMascot } from "@/components/common/BouncyMascot";
 
 /* ── Migaku palette ──────────────────────────────────────────── */
 const CORAL = "linear-gradient(135deg,#ff8a4c 0%,#ff4d6a 100%)";
@@ -350,7 +351,7 @@ export function LandingPage() {
         </div>
         <div className="relative mt-16 h-72">
           <NeonCity />
-          <Mascot className="absolute bottom-0 left-1/2 z-10 h-32 w-32 -translate-x-1/2" />
+          <BouncyMascot className="absolute bottom-0 left-1/2 z-10 -translate-x-1/2" size="h-32 w-32" />
         </div>
       </section>
 

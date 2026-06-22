@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { Mascot, KStar } from "./Kawaii";
+import { KStar } from "./Kawaii";
 import { Confetti } from "./Confetti";
+import { BouncyMascot } from "./BouncyMascot";
 
 const PENDING_KEY = "jap_welcome_pending";
 
@@ -85,9 +86,9 @@ export function WelcomeOverlay({ name }: { name?: string }) {
       className={`fixed bottom-5 left-5 z-50 flex items-end gap-3 ${leaving ? "fade-out" : ""}`}
       onAnimationEnd={() => leaving && setShow(false)}
     >
-      <div className="pop-in relative">
+      <div className="relative">
         <Confetti count={26} />
-        <Mascot className="wiggle h-28 w-28 drop-shadow-[0_10px_20px_rgba(0,0,0,0.35)]" />
+        <BouncyMascot className="drop-shadow-[0_10px_20px_rgba(0,0,0,0.35)]" size="h-28 w-28" />
       </div>
 
       <div className="bubble-in relative mb-10 max-w-[16rem] rounded-3xl border border-white/15 bg-white px-5 py-4 text-[#1b1240] shadow-2xl">

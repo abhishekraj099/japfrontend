@@ -6,8 +6,8 @@ import { ReviewCard } from "@/features/reviews/components/ReviewCard";
 import { ReviewProgress } from "@/features/reviews/components/ReviewProgress";
 import { ROUTES } from "@/constants/routes";
 import { MemoryArt } from "@/components/common/FeatureArt";
-import { Mascot } from "@/components/common/Kawaii";
 import { Confetti } from "@/components/common/Confetti";
+import { BouncyMascot } from "@/components/common/BouncyMascot";
 
 type SessionState = "loading" | "error" | "empty" | "reviewing" | "complete";
 
@@ -106,7 +106,7 @@ export function ReviewPage() {
   if (sessionState === "empty") {
     return (
       <div className="max-w-xl mx-auto mt-16 text-center space-y-4">
-        <Mascot className="float-soft mx-auto h-28 w-28" />
+        <BouncyMascot className="mx-auto" size="h-28 w-28" />
         <h2 className="font-display text-3xl text-ink-900">You're all caught up!</h2>
         <p className="text-ink-500 text-sm">
           No cards are due for review right now. Come back later!
