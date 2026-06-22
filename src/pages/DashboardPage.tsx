@@ -7,7 +7,10 @@ import { CreateDeckForm } from "@/features/decks/components/CreateDeckForm";
 import { useDueCards } from "@/features/reviews/hooks/useDueCards";
 import { useAuthContext } from "@/providers/AuthProvider";
 import { ROUTES } from "@/constants/routes";
-import { Seigaiha } from "@/components/common/Seigaiha";
+import { Mascot, Onigiri, Lantern, Sakura, Torii, KStar } from "@/components/common/Kawaii";
+import { AnimeScene } from "@/components/common/AnimeScene";
+import { photoFor } from "@/components/common/MediaCard";
+import { AudioButton } from "@/components/common/AudioButton";
 
 function dayOfYear() {
   const now = new Date();
@@ -57,70 +60,73 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* Editorial hero */}
-      <div className="flex items-end justify-between">
-        <div>
-          <p className="font-jp text-sm tracking-[0.28em] text-sakura-500">{g.jp}</p>
-          <h1 className="font-display mt-1.5 text-[44px] leading-[1.05] text-ink-900">
-            {g.en}
-            {user?.name ? (
-              <>
-                ,<br />
-                <span className="italic">{user.name.split(" ")[0]}</span>
-              </>
-            ) : null}
-          </h1>
-        </div>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-ink-900 text-paper transition active:scale-90"
-          title="New deck"
-        >
-          <Plus className="h-5 w-5" />
-        </button>
-      </div>
+      {/* ── Anime key-visual hero banner ── */}
+      <div className="holo relative overflow-hidden rounded-[1.9rem]" style={{ boxShadow: "0 30px 70px -28px rgba(214,64,106,0.55)" }}>
+        <AnimeScene className="absolute inset-0 h-full w-full" />
+        {/* readability scrim */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#150a36] via-[#150a36]/70 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#150a36] to-transparent" />
 
-      {/* Review — hero card with mint glow */}
-      <Link
-        to={ROUTES.REVIEW}
-        className="paper-card tap group relative block overflow-hidden p-7"
-      >
-        {/* mint + violet glow blobs */}
-        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-indigo-500/25 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 left-10 h-44 w-44 rounded-full bg-jade-500/20 blur-3xl" />
-        <Seigaiha className="pointer-events-none absolute inset-0 h-full w-full" color="#22d3a6" opacity={0.07} />
-        <span aria-hidden className="font-jp pointer-events-none absolute -right-4 -bottom-12 select-none text-[12rem] leading-none text-indigo-500/10">
-          復習
-        </span>
-        <div className="relative">
-          <p className="section-label text-indigo-400">今日の復習 · Daily review</p>
-          <h2 className="font-display mt-3 max-w-md text-3xl leading-tight text-ink-900">
-            {dueCount > 0 ? (
-              <>
-                <span className="text-gradient">{dueCount} card{dueCount === 1 ? "" : "s"}</span>{" "}
-                are waiting for you
-              </>
-            ) : (
-              "You're all caught up today"
-            )}
-          </h2>
-          <span className="mt-6 inline-flex items-center gap-2 rounded-full bg-indigo-500 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition group-hover:bg-indigo-600">
-            {dueCount > 0 ? "Begin review" : "Practice freely"}
-            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </span>
+        <div className="relative flex min-h-[300px] flex-col justify-between p-7 sm:p-9">
+          <div className="flex items-start justify-between">
+            <p className="flex items-center gap-2 font-jp text-sm tracking-[0.28em] text-sakura-300">
+              <Sakura className="h-5 w-5" /> {g.jp}
+            </p>
+            <button
+              onClick={() => setShowCreate(true)}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-white/25 active:scale-90"
+              title="New deck"
+            >
+              <Plus className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="max-w-lg">
+            <h1 className="font-display text-[40px] font-extrabold leading-[1.04] text-white glow-coral sm:text-5xl">
+              {g.en}
+              {user?.name ? <>, {user.name.split(" ")[0]}</> : ""}
+            </h1>
+            <p className="mt-3 text-[15px] text-white/75">
+              {dueCount > 0
+                ? `You have ${dueCount} card${dueCount === 1 ? "" : "s"} ready to review today.`
+                : "You're all caught up — explore your decks or the dictionary."}
+            </p>
+            <Link
+              to={ROUTES.REVIEW}
+              className="pulse-glow group mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-[#d6406a] shadow-lg transition hover:scale-[1.03]"
+            >
+              <span className="font-jp">復習</span>
+              {dueCount > 0 ? "Begin review" : "Practice freely"}
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+          </div>
         </div>
-      </Link>
+      </div>
 
       {/* Kanji + proverb */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-5">
-        <div className="paper-card sm:col-span-3 p-6">
-          <p className="section-label text-sakura-500">Kanji of the day</p>
-          <div className="mt-3 flex items-center gap-6">
-            <span className="font-jp text-7xl leading-none text-ink-900">{kanji.k}</span>
-            <div>
-              <p className="font-display text-2xl capitalize text-indigo-500">
-                {kanji.meaning}
-              </p>
+        <div className="paper-card relative overflow-hidden sm:col-span-3">
+          <Onigiri className="pointer-events-none absolute right-3 top-3 z-10 h-14 w-14 rotate-12 opacity-90" />
+          <div className="flex flex-col sm:flex-row">
+            {/* real themed photo */}
+            <div className="relative h-32 w-full shrink-0 sm:h-auto sm:w-40">
+              <img
+                src={photoFor(kanji.meaning, 400, 400)}
+                alt={kanji.meaning}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+              <span className="font-jp absolute bottom-2 left-2 rounded-xl bg-black/45 px-2.5 py-1 text-3xl font-bold text-white backdrop-blur-sm">
+                {kanji.k}
+              </span>
+            </div>
+            {/* details */}
+            <div className="flex-1 p-6">
+              <p className="section-label text-sakura-500">Kanji of the day</p>
+              <div className="mt-2 flex items-center gap-2">
+                <p className="font-display text-2xl capitalize text-indigo-500">{kanji.meaning}</p>
+                <AudioButton text={kanji.k} className="text-ink-400 hover:text-indigo-400" />
+              </div>
               <p className="font-jp mt-1 text-[15px] text-ink-500">
                 訓 {kanji.kun} ・ 音 {kanji.on}
               </p>
@@ -128,9 +134,10 @@ export function DashboardPage() {
           </div>
         </div>
 
-        <div className="paper-card sm:col-span-2 flex flex-col justify-between p-6">
+        <div className="paper-card relative overflow-hidden sm:col-span-2 flex flex-col justify-between p-6">
+          <Lantern className="pointer-events-none absolute -right-2 bottom-2 h-20 w-20 opacity-90" />
           <p className="section-label text-sakura-500">Today's proverb</p>
-          <div className="mt-3">
+          <div className="relative mt-3">
             <p className="font-jp text-xl leading-snug text-ink-900">{proverb.jp}</p>
             <p className="font-display mt-2 text-lg italic leading-snug text-ink-500">
               {proverb.en}
@@ -149,12 +156,20 @@ export function DashboardPage() {
 
       {/* Decks */}
       <div className="flex items-center justify-between px-1">
-        <p className="section-label">
-          My decks{deckCount > 0 ? ` · ${deckCount}` : ""}
-        </p>
+        <div className="flex items-center gap-2.5">
+          <span className="h-7 w-1.5 rounded-full bg-gradient-to-b from-indigo-400 to-sakura-500" />
+          <h2 className="font-display text-xl text-ink-900">
+            My Decks <span className="font-jp text-sm text-ink-400">· 札</span>
+            {deckCount > 0 && (
+              <span className="ml-1.5 rounded-full bg-white/8 px-2 py-0.5 text-sm font-bold text-ink-400">
+                {deckCount}
+              </span>
+            )}
+          </h2>
+        </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="text-sm font-semibold text-indigo-500 hover:text-indigo-600"
+          className="text-sm font-bold text-indigo-400 hover:text-indigo-300"
         >
           + Add
         </button>
@@ -186,10 +201,9 @@ export function DashboardPage() {
 
       {!isLoading && !isError && deckCount === 0 && (
         <div className="paper-card relative flex flex-col items-center overflow-hidden px-6 py-16 text-center">
-          <Seigaiha className="pointer-events-none absolute inset-x-0 bottom-0 h-24 w-full" color="#22d3a6" opacity={0.08} />
-          <span className="relative mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500 font-jp text-3xl text-paper">
-            空
-          </span>
+          <Torii className="pointer-events-none absolute left-6 top-6 h-16 w-16 opacity-80" />
+          <KStar className="pointer-events-none absolute right-10 top-10 h-5 w-5" />
+          <Mascot className="relative mb-3 h-24 w-24" />
           <h3 className="font-display relative text-2xl text-ink-900">No decks yet</h3>
           <p className="relative mt-1 max-w-xs text-[15px] text-ink-500">
             Create a deck to start adding flashcards and learning Japanese.

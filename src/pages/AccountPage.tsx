@@ -14,6 +14,7 @@ import { useAuthContext } from "@/providers/AuthProvider";
 import { useDecks } from "@/features/decks/hooks/useDecks";
 import { useDueCards } from "@/features/reviews/hooks/useDueCards";
 import { ROUTES } from "@/constants/routes";
+import { SectionHeader } from "@/components/common/SectionHeader";
 
 function initials(name?: string) {
   if (!name) return "?";
@@ -73,7 +74,8 @@ export function AccountPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-display text-[34px] leading-tight text-ink-900">Account</h1>
+      <SectionHeader jp="アカウント · Account" title="Your account" />
+
 
       {/* Profile */}
       <div className="paper-card flex items-center gap-4 p-6">

@@ -12,6 +12,7 @@ export function useLogin() {
     mutationFn: authService.login,
     onSuccess: (data) => {
       setAuth(data.user, data.token);
+      sessionStorage.setItem("jap_welcome_pending", "1");
       navigate(ROUTES.DASHBOARD);
     },
   });
@@ -25,6 +26,7 @@ export function useRegister() {
     mutationFn: authService.register,
     onSuccess: (data) => {
       setAuth(data.user, data.token);
+      sessionStorage.setItem("jap_welcome_pending", "1");
       navigate(ROUTES.DASHBOARD);
     },
   });

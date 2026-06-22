@@ -2,6 +2,8 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import { Layers, GraduationCap, BookOpen, Settings } from "lucide-react";
 import { useAuthContext } from "@/providers/AuthProvider";
 import { ROUTES } from "@/constants/routes";
+import { AppAmbience } from "@/components/common/AppAmbience";
+import { WelcomeOverlay } from "@/components/common/WelcomeOverlay";
 
 const NAV = [
   { to: ROUTES.DASHBOARD, label: "Decks", jp: "札", icon: Layers },
@@ -19,7 +21,9 @@ export function AppLayout() {
   const { user } = useAuthContext();
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <AppAmbience />
+      <WelcomeOverlay name={user?.name} />
       <header className="paper-blur sticky top-0 z-20 border-b border-line/70">
         <div className="mx-auto flex h-[58px] max-w-3xl items-center justify-between px-5">
           <Link to={ROUTES.DASHBOARD} className="flex items-center gap-2.5">
@@ -46,7 +50,7 @@ export function AppLayout() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-5 pb-28 pt-7">
+      <main className="relative z-10 mx-auto max-w-3xl px-5 pb-28 pt-7">
         <Outlet />
       </main>
 

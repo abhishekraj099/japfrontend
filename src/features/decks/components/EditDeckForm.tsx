@@ -52,7 +52,7 @@ export function EditDeckForm({ deck, onClose }: Props) {
         <input
           id="edit-name"
           type="text"
-          className="w-full rounded-xl border border-line bg-paper/50 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-200 focus:ring-2 focus:ring-indigo-100"
+          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30"
           {...register("name")}
         />
         {errors.name && (
@@ -67,7 +67,7 @@ export function EditDeckForm({ deck, onClose }: Props) {
         <textarea
           id="edit-description"
           rows={3}
-          className="w-full resize-none rounded-xl border border-line bg-paper/50 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-200 focus:ring-2 focus:ring-indigo-100"
+          className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-[16px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30"
           {...register("description")}
         />
         {errors.description && (

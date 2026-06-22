@@ -5,6 +5,9 @@ import { useSubmitReview } from "@/features/reviews/hooks/useSubmitReview";
 import { ReviewCard } from "@/features/reviews/components/ReviewCard";
 import { ReviewProgress } from "@/features/reviews/components/ReviewProgress";
 import { ROUTES } from "@/constants/routes";
+import { MemoryArt } from "@/components/common/FeatureArt";
+import { Mascot } from "@/components/common/Kawaii";
+import { Confetti } from "@/components/common/Confetti";
 
 type SessionState = "loading" | "error" | "empty" | "reviewing" | "complete";
 
@@ -102,8 +105,8 @@ export function ReviewPage() {
   // ─── Empty ──────────────────────────────────────────────────────────────────
   if (sessionState === "empty") {
     return (
-      <div className="max-w-xl mx-auto mt-20 text-center space-y-4">
-        <div className="text-5xl">🌸</div>
+      <div className="max-w-xl mx-auto mt-16 text-center space-y-4">
+        <Mascot className="float-soft mx-auto h-28 w-28" />
         <h2 className="font-display text-3xl text-ink-900">You're all caught up!</h2>
         <p className="text-ink-500 text-sm">
           No cards are due for review right now. Come back later!
@@ -121,8 +124,11 @@ export function ReviewPage() {
   // ─── Complete ───────────────────────────────────────────────────────────────
   if (sessionState === "complete") {
     return (
-      <div className="max-w-xl mx-auto mt-20 text-center space-y-5">
-        <div className="text-5xl">🎉</div>
+      <div className="relative max-w-xl mx-auto mt-16 text-center space-y-5">
+        <div className="relative mx-auto h-32 w-40">
+          <Confetti count={32} />
+          <MemoryArt className="h-32 w-40" />
+        </div>
         <h2 className="font-display text-3xl text-ink-900">Session complete!</h2>
         <p className="text-ink-500 text-sm">
           You reviewed{" "}
@@ -162,31 +168,39 @@ export function ReviewPage() {
   const card = dueCards![currentIndex];
 
   return (
-    <div className="max-w-xl mx-auto space-y-6">
+    <div className="relative mx-auto max-w-xl space-y-6">
+      {/* anime backdrop behind the card */}
+      <div className="sunburst spin-slow pointer-events-none absolute left-1/2 top-24 -z-0 h-[560px] w-[560px] -translate-x-1/2 opacity-[0.06]" style={{ maskImage: "radial-gradient(circle, black 0%, transparent 62%)", WebkitMaskImage: "radial-gradient(circle, black 0%, transparent 62%)" }} />
+
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="relative flex items-center justify-between">
         <button
           onClick={() => navigate(ROUTES.DASHBOARD)}
-          className="text-sm text-ink-400 hover:text-ink-900 transition cursor-pointer"
+          className="flex items-center gap-1.5 text-sm font-semibold text-ink-400 transition hover:text-ink-900 cursor-pointer"
         >
           ← Exit
         </button>
-        <span className="section-label">
+        <span className="flex items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-ink-400 ring-1 ring-white/10">
+          <span className="font-jp text-sakura-500">復習</span>
           {submitting ? "Saving…" : "Review Session"}
         </span>
       </div>
 
       {/* Progress */}
-      <ReviewProgress current={currentIndex + 1} total={dueCards!.length} />
+      <div className="relative">
+        <ReviewProgress current={currentIndex + 1} total={dueCards!.length} />
+      </div>
 
       {/* Card */}
-      <ReviewCard
-        card={card}
-        revealed={revealed}
-        submitting={submitting}
-        onReveal={handleReveal}
-        onRate={handleRate}
-      />
+      <div className="relative">
+        <ReviewCard
+          card={card}
+          revealed={revealed}
+          submitting={submitting}
+          onReveal={handleReveal}
+          onRate={handleRate}
+        />
+      </div>
 
       {/* Keyboard legend */}
       {revealed && (

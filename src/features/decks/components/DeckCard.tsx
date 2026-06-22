@@ -42,7 +42,9 @@ export function DeckCard({ deck }: Props) {
   }
 
   return (
-    <div className="paper-card tap group relative flex flex-col overflow-hidden">
+    <div className="paper-card tap holo-hover group relative flex flex-col overflow-hidden">
+      {/* glowing top accent in the deck's colour */}
+      <span className={`pointer-events-none absolute inset-x-0 top-0 h-1 ${t.bg} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
       <span aria-hidden className="font-jp pointer-events-none absolute -bottom-8 -right-2 select-none text-[8.5rem] leading-none text-ink-900/[0.04] transition-transform duration-500 group-hover:scale-110">
         {t.jp}
       </span>
