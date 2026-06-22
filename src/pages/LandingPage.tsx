@@ -53,8 +53,8 @@ function Nav() {
   return (
     <header className="sticky top-0 z-30 border-b border-white/10 bg-[#140b38]/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl font-jp text-lg text-white" style={{ background: CORAL }}>語</span>
+        <Link to="/" className="flex items-center gap-2" style={{ perspective: "600px" }}>
+          <span className="logo-spin flex h-9 w-9 items-center justify-center rounded-xl font-jp text-lg text-white" style={{ background: CORAL }}>語</span>
           <span className="text-2xl font-extrabold tracking-tight" style={{ background: CORAL, WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>JAP</span>
         </Link>
         <nav className="hidden items-center gap-7 text-sm font-bold text-white/80 md:flex">

@@ -9,7 +9,7 @@ import { CreateDeckForm } from "@/features/decks/components/CreateDeckForm";
 import { useDueCards } from "@/features/reviews/hooks/useDueCards";
 import { useAuthContext } from "@/providers/AuthProvider";
 import { ROUTES } from "@/constants/routes";
-import { Mascot, Onigiri, Lantern, Sakura, Torii, KStar } from "@/components/common/Kawaii";
+import { Mascot, Onigiri, Lantern, Torii, KStar } from "@/components/common/Kawaii";
 import { AnimeScene } from "@/components/common/AnimeScene";
 import { photoFor } from "@/components/common/MediaCard";
 import { AudioButton } from "@/components/common/AudioButton";
@@ -86,40 +86,36 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* ── Anime key-visual hero banner ── */}
-      <div className="holo relative overflow-hidden rounded-[1.9rem]" style={{ boxShadow: "0 30px 70px -28px rgba(214,64,106,0.55)" }}>
+      {/* ── scene hero banner (clean) ── */}
+      <div className="relative overflow-hidden rounded-[1.8rem] shadow-[0_24px_60px_-28px_rgba(0,0,0,0.7)]">
         <AnimeScene className="absolute inset-0 h-full w-full" />
-        {/* readability scrim */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#150a36] via-[#150a36]/70 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#150a36] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#150a36]/90 via-[#150a36]/55 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#150a36]/80 to-transparent" />
 
-        <div className="relative flex min-h-[300px] flex-col justify-between p-7 sm:p-9">
+        <div className="relative flex min-h-[280px] flex-col justify-between p-7 sm:p-8">
           <div className="flex items-start justify-between">
-            <p className="flex items-center gap-2 font-jp text-sm tracking-[0.28em] text-sakura-300">
-              <Sakura className="h-5 w-5" /> {g.jp}
-            </p>
+            <p className="font-jp text-sm tracking-[0.24em] text-sakura-300">{g.jp}</p>
             <button
               onClick={() => setShowCreate(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-white/25 active:scale-90"
-              title="New deck"
+              className="flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-bold text-white backdrop-blur transition hover:bg-white/25 active:scale-95"
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="h-4 w-4" /> <span className="hidden sm:inline">New deck</span>
             </button>
           </div>
 
-          <div className="max-w-lg">
-            <h1 className="font-display text-[40px] font-extrabold leading-[1.04] text-white glow-coral sm:text-5xl">
+          <div className="max-w-md">
+            <h1 className="font-display text-4xl font-extrabold leading-[1.05] text-white sm:text-[42px]">
               {g.en}
               {user?.name ? <>, {user.name.split(" ")[0]}</> : ""}
             </h1>
-            <p className="mt-3 text-[15px] text-white/75">
+            <p className="mt-2.5 text-[15px] text-white/75">
               {dueCount > 0
-                ? `You have ${dueCount} card${dueCount === 1 ? "" : "s"} ready to review today.`
-                : "You're all caught up — explore your decks or the dictionary."}
+                ? `${dueCount} card${dueCount === 1 ? "" : "s"} are ready for review today.`
+                : "You're all caught up — explore your decks below."}
             </p>
             <Link
               to={ROUTES.REVIEW}
-              className="pulse-glow group mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-[#d6406a] shadow-lg transition hover:scale-[1.03]"
+              className="group mt-5 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-extrabold text-[#d6406a] shadow-lg transition hover:scale-[1.03]"
             >
               <span className="font-jp">復習</span>
               {dueCount > 0 ? "Begin review" : "Practice freely"}

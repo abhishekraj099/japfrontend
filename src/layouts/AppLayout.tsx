@@ -26,8 +26,8 @@ export function AppLayout() {
       <WelcomeOverlay name={user?.name} />
       <header className="paper-blur sticky top-0 z-20 border-b border-line/70">
         <div className="mx-auto flex h-[58px] max-w-3xl items-center justify-between px-5">
-          <Link to={ROUTES.DASHBOARD} className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500 font-jp text-lg font-medium text-paper">
+          <Link to={ROUTES.DASHBOARD} className="flex items-center gap-2.5" style={{ perspective: "600px" }}>
+            <span className="logo-spin flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-400 to-indigo-600 font-jp text-lg font-medium text-white shadow-md shadow-indigo-500/30">
               語
             </span>
             <span className="font-display text-[26px] leading-none text-ink-900">
