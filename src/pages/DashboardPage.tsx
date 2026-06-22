@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Plus, ArrowUpRight } from "lucide-react";
+import { Plus, ArrowUpRight, Flame, Layers } from "lucide-react";
+import { ProgressRing } from "@/components/common/ProgressRing";
+import { DEFAULT_REVIEW_LIMIT } from "@/constants/app";
 import { useDecks } from "@/features/decks/hooks/useDecks";
 import { DeckList } from "@/features/decks/components/DeckList";
 import { CreateDeckForm } from "@/features/decks/components/CreateDeckForm";
@@ -45,6 +47,29 @@ function greeting() {
   return { en: "Good evening", jp: "こんばんは" };
 }
 
+/* a real daily streak, tracked locally */
+function useStreak() {
+  const [streak, setStreak] = useState(1);
+  useEffect(() => {
+    try {
+      const today = new Date().toDateString();
+      const yesterday = new Date(Date.now() - 86_400_000).toDateString();
+      const raw = localStorage.getItem("jap_streak");
+      const data = raw ? (JSON.parse(raw) as { last: string; count: number }) : null;
+      if (data?.last === today) {
+        setStreak(data.count);
+        return;
+      }
+      const count = data?.last === yesterday ? data.count + 1 : 1;
+      localStorage.setItem("jap_streak", JSON.stringify({ last: today, count }));
+      setStreak(count);
+    } catch {
+      setStreak(1);
+    }
+  }, []);
+  return streak;
+}
+
 export function DashboardPage() {
   const [showCreate, setShowCreate] = useState(false);
   const { data: decks, isLoading, isError, refetch } = useDecks();
@@ -54,6 +79,7 @@ export function DashboardPage() {
   const g = greeting();
   const deckCount = decks?.length ?? 0;
   const dueCount = due?.length ?? 0;
+  const streak = useStreak();
   const seed = dayOfYear();
   const kanji = KANJI[seed % KANJI.length];
   const proverb = PROVERBS[seed % PROVERBS.length];
@@ -99,6 +125,50 @@ export function DashboardPage() {
               {dueCount > 0 ? "Begin review" : "Practice freely"}
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* ── modern stats bento ── */}
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        {/* streak */}
+        <div className="paper-card tap holo-hover relative flex items-center gap-3 overflow-hidden p-4">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ff8a4c] to-[#ff4d6a] text-white shadow-lg">
+            <Flame className="h-6 w-6" />
+          </span>
+          <div className="min-w-0">
+            <p className="font-display text-2xl leading-none text-ink-900">{streak}</p>
+            <p className="mt-1 truncate text-xs font-semibold text-ink-400">day streak</p>
+          </div>
+        </div>
+
+        {/* due today with ring */}
+        <Link to={ROUTES.REVIEW} className="paper-card tap holo-hover relative flex items-center gap-3 overflow-hidden p-4">
+          <ProgressRing
+            value={dueCount > 0 ? Math.min(1, dueCount / DEFAULT_REVIEW_LIMIT) : 1}
+            size={48}
+            stroke={6}
+            from="#1ad3b0"
+            to="#5bd1ff"
+          >
+            <span className="font-display text-sm font-bold text-ink-900">{dueCount}</span>
+          </ProgressRing>
+          <div className="min-w-0">
+            <p className="font-display text-2xl leading-none text-ink-900">{dueCount}</p>
+            <p className="mt-1 truncate text-xs font-semibold text-ink-400">due today</p>
+          </div>
+        </Link>
+
+        {/* decks */}
+        <div className="paper-card tap holo-hover relative flex items-center gap-3 overflow-hidden p-4">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#7c5cff] to-[#5bd1ff] text-white shadow-lg">
+            <Layers className="h-6 w-6" />
+          </span>
+          <div className="min-w-0">
+            <p className="font-display text-2xl leading-none text-ink-900">{deckCount}</p>
+            <p className="mt-1 truncate text-xs font-semibold text-ink-400">
+              deck{deckCount === 1 ? "" : "s"}
+            </p>
           </div>
         </div>
       </div>
