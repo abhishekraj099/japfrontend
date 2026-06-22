@@ -26,6 +26,7 @@ export interface Card {
   exampleTranslation: string | null;
   pageTitle: string | null;
   extractionSource: string | null;
+  imageUrl: string | null;
   deckId: string;
   createdAt: string;
   updatedAt: string;
@@ -50,6 +51,7 @@ export interface CreateCardInput {
   exampleTranslation?: string;
   pageTitle?: string;
   extractionSource?: string;
+  imageUrl?: string;
 }
 
 export interface UpdateCardInput {

@@ -80,6 +80,14 @@ export function CardItem({ card, deckId }: Props) {
           </p>
           <p className="text-ink-700 leading-snug">{card.answer}</p>
 
+          {card.imageUrl && (
+            <img
+              src={card.imageUrl}
+              alt=""
+              className="mt-3 max-h-32 rounded-lg border border-line object-contain"
+            />
+          )}
+
           {card.grammarNotes && (
             <div className="mt-3">
               <p className="text-xs font-medium text-ink-400 uppercase tracking-wide mb-1">
@@ -150,7 +158,7 @@ export function CardItem({ card, deckId }: Props) {
 
       {/* Actions */}
       <div className="flex items-center gap-1 px-4 py-2 border-t border-line bg-paper">
-        {(isGrammar || isSentence || card.exampleSentence || card.sourceUrl) && (
+        {(isGrammar || isSentence || card.exampleSentence || card.sourceUrl || card.imageUrl) && (
           <button
             onClick={() => setShowDetails(true)}
             className="text-xs text-ink-500 hover:text-ink-900 px-3 py-1.5 rounded-lg hover:bg-card transition cursor-pointer"

@@ -44,6 +44,7 @@ export function useCreateCard(deckId: string, onSuccess?: () => void) {
           exampleTranslation: newCard.exampleTranslation ?? null,
           pageTitle: newCard.pageTitle ?? null,
           extractionSource: newCard.extractionSource ?? null,
+          imageUrl: newCard.imageUrl ?? null,
           deckId,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),

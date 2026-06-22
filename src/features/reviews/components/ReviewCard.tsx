@@ -93,6 +93,14 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
             {card.answer}
           </p>
 
+          {card.imageUrl && (
+            <img
+              src={card.imageUrl}
+              alt=""
+              className="mx-auto mt-4 max-h-40 rounded-lg border border-line object-contain"
+            />
+          )}
+
           {isSentence && card.reading && (
             <p className="font-jp mt-2 text-sm text-ink-500">{card.reading}</p>
           )}

@@ -28,6 +28,7 @@ export interface DueCard {
   exampleSentence: string | null;
   exampleReading: string | null;
   exampleTranslation: string | null;
+  imageUrl: string | null;
   deckId: string;
   schedule: {
     dueDate: string;

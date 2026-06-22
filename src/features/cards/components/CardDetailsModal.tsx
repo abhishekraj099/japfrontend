@@ -144,6 +144,16 @@ export function CardDetailsModal({ card, onClose }: Props) {
             </Field>
           )}
 
+          {card.imageUrl && (
+            <Field label="Screenshot">
+              <img
+                src={card.imageUrl}
+                alt=""
+                className="max-h-48 rounded-lg border border-line object-contain"
+              />
+            </Field>
+          )}
+
           {card.sourceUrl && (
             <Field label="Source">
               <a
