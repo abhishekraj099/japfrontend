@@ -33,6 +33,10 @@ export function ReviewPage() {
     setRevealed(true);
   }, []);
 
+  const handleHide = useCallback(() => {
+    setRevealed(false);
+  }, []);
+
   const handleRate = useCallback(
     (rating: number) => {
       if (!dueCards) return;
@@ -168,9 +172,10 @@ export function ReviewPage() {
   const card = dueCards![currentIndex];
 
   return (
-    <div className="relative mx-auto max-w-xl space-y-6">
+    <div className="relative mx-auto flex min-h-[calc(100vh-9rem)] max-w-xl flex-col gap-6">
       {/* anime backdrop behind the card */}
-      <div className="sunburst spin-slow pointer-events-none absolute left-1/2 top-24 -z-0 h-[560px] w-[560px] -translate-x-1/2 opacity-[0.06]" style={{ maskImage: "radial-gradient(circle, black 0%, transparent 62%)", WebkitMaskImage: "radial-gradient(circle, black 0%, transparent 62%)" }} />
+      <div className="sunburst spin-slow pointer-events-none absolute left-1/2 top-1/4 -z-0 h-[620px] w-[620px] -translate-x-1/2 opacity-[0.06]" style={{ maskImage: "radial-gradient(circle, black 0%, transparent 62%)", WebkitMaskImage: "radial-gradient(circle, black 0%, transparent 62%)" }} />
+      <div className="pointer-events-none absolute left-1/2 top-1/3 -z-0 h-72 w-72 -translate-x-1/2 rounded-full bg-indigo-500/10 blur-[100px]" />
 
       {/* Header */}
       <div className="relative flex items-center justify-between">
@@ -186,18 +191,15 @@ export function ReviewPage() {
         </span>
       </div>
 
-      {/* Progress */}
-      <div className="relative">
+      {/* Progress + card, vertically centered */}
+      <div className="relative flex flex-1 flex-col justify-center gap-6">
         <ReviewProgress current={currentIndex + 1} total={dueCards!.length} />
-      </div>
-
-      {/* Card */}
-      <div className="relative">
         <ReviewCard
           card={card}
           revealed={revealed}
           submitting={submitting}
           onReveal={handleReveal}
+          onHide={handleHide}
           onRate={handleRate}
         />
       </div>

@@ -86,7 +86,7 @@ export function AccountPage() {
           <p className="font-display text-xl text-ink-900">{user?.name}</p>
           <p className="truncate text-sm text-ink-500">{user?.email}</p>
         </div>
-        <span className="hidden rounded-full bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-600 sm:inline">
+        <span className="hidden rounded-full bg-jade-500/15 px-3 py-1 text-xs font-bold text-jade-500 sm:inline">
           Free plan
         </span>
       </div>
@@ -105,9 +105,9 @@ export function AccountPage() {
         <div className="relative">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5" />
-            <p className="text-sm font-bold uppercase tracking-wider text-white/80">Migaku Pro</p>
+            <p className="text-sm font-bold uppercase tracking-wider text-white/80">JAP Pro</p>
           </div>
-          <h2 className="font-display mt-2 text-2xl">Unlock everything</h2>
+          <h2 className="font-display mt-2 text-2xl">Unlock the extension + everything</h2>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">
             {PRO_FEATURES.map((f) => (
               <li key={f} className="flex items-center gap-2 text-sm text-white/90">
@@ -118,9 +118,12 @@ export function AccountPage() {
               </li>
             ))}
           </ul>
-          <button className="mt-5 rounded-full bg-white px-6 py-3 text-sm font-bold text-indigo-600 shadow-lg transition hover:shadow-xl active:scale-[0.98]">
-            Upgrade to Pro
-          </button>
+          <Link
+            to={ROUTES.PRICING}
+            className="mt-5 inline-block rounded-full bg-white px-6 py-3 text-sm font-bold text-indigo-600 shadow-lg transition hover:shadow-xl active:scale-[0.98]"
+          >
+            See plans & upgrade
+          </Link>
         </div>
       </div>
 

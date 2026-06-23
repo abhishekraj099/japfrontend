@@ -14,6 +14,9 @@ import { OnboardingPage, ONBOARDED_KEY } from "@/pages/OnboardingPage";
 import { IntegrationsPage } from "@/pages/IntegrationsPage";
 import { AccountPage } from "@/pages/AccountPage";
 import { LandingPage } from "@/pages/LandingPage";
+import { PricingPage } from "@/pages/PricingPage";
+import { DownloadPage } from "@/pages/DownloadPage";
+import { CheckoutPage } from "@/pages/CheckoutPage";
 import { useAuthContext } from "@/providers/AuthProvider";
 
 void ONBOARDED_KEY;
@@ -29,6 +32,18 @@ export const router = createBrowserRouter([
   {
     path: ROUTES.HOME,
     element: <Home />,
+  },
+  {
+    path: ROUTES.PRICING,
+    element: <PricingPage />,
+  },
+  {
+    path: ROUTES.DOWNLOAD,
+    element: <DownloadPage />,
+  },
+  {
+    path: ROUTES.CHECKOUT,
+    element: <CheckoutPage />,
   },
   {
     element: <PublicOnlyRoute />,

@@ -10,10 +10,11 @@ interface Props {
   revealed: boolean;
   submitting: boolean;
   onReveal: () => void;
+  onHide: () => void;
   onRate: (rating: number) => void;
 }
 
-export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Props) {
+export function ReviewCard({ card, revealed, submitting, onReveal, onHide, onRate }: Props) {
   const isGrammar = card.cardType === "grammar";
   const isSentence = card.cardType === "sentence";
   const frontLabel = isSentence ? "Sentence" : isGrammar ? "Pattern" : "Question";
@@ -47,8 +48,9 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
     <div className="space-y-6">
       {/* Card face */}
       <div className="paper-card overflow-hidden">
+        <div className="h-1.5 bg-gradient-to-r from-indigo-500 via-[#7c5cff] to-sakura-500" />
         {/* Question */}
-        <div className="border-b border-line px-8 py-12 text-center">
+        <div className="relative border-b border-line px-8 py-12 text-center">
           <div className="mb-5 flex items-center justify-center gap-2">
             <CardTypeBadge cardType={card.cardType} />
             <span className="section-label">{frontLabel}</span>
@@ -88,7 +90,15 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onRate }: Pro
             revealed ? "opacity-100" : "pointer-events-none h-0 py-0 opacity-0"
           }`}
         >
-          <p className="section-label mb-4 text-sakura-500">{backLabel}</p>
+          <div className="mb-4 flex items-center justify-center gap-3">
+            <p className="section-label text-sakura-500">{backLabel}</p>
+            <button
+              onClick={onHide}
+              className="rounded-full bg-white/[0.08] px-3 py-1 text-[11px] font-bold text-ink-400 ring-1 ring-white/10 transition hover:text-ink-900"
+            >
+              ↑ Hide
+            </button>
+          </div>
           <p className="font-jp text-3xl leading-snug text-indigo-500 break-words">
             {card.answer}
           </p>

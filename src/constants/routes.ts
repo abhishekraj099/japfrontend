@@ -1,5 +1,8 @@
 export const ROUTES = {
   HOME: "/",
+  PRICING: "/pricing",
+  DOWNLOAD: "/download",
+  CHECKOUT: "/checkout",
   ONBOARDING: "/welcome",
   LOGIN: "/login",
   REGISTER: "/register",

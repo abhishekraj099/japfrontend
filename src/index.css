@@ -274,6 +274,10 @@ body {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* flowing dashes along ecosystem hub connectors */
+.flow { animation: flow 1s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -6; } }
+
 /* vertical marquee for the testimonial wall */
 .marquee-track {
   animation: marquee-up var(--mq, 34s) linear infinite;
