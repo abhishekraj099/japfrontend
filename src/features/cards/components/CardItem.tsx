@@ -4,6 +4,7 @@ import { EditCardForm } from "./EditCardForm";
 import { CardTypeBadge } from "./CardTypeBadge";
 import { CardDetailsModal } from "./CardDetailsModal";
 import { AudioButton } from "@/components/common/AudioButton";
+import { NativeAudioButton } from "@/components/common/NativeAudioButton";
 import { PitchAccent } from "@/components/common/PitchAccent";
 import type { Card } from "@/types/card.types";
 
@@ -88,6 +89,12 @@ export function CardItem({ card, deckId }: Props) {
             />
           )}
 
+          {card.audioUrl && (
+            <div className="mt-3">
+              <NativeAudioButton src={card.audioUrl} />
+            </div>
+          )}
+
           {card.grammarNotes && (
             <div className="mt-3">
               <p className="text-xs font-medium text-ink-400 uppercase tracking-wide mb-1">
@@ -158,7 +165,7 @@ export function CardItem({ card, deckId }: Props) {
 
       {/* Actions */}
       <div className="flex items-center gap-1 px-4 py-2 border-t border-line bg-paper">
-        {(isGrammar || isSentence || card.exampleSentence || card.sourceUrl || card.imageUrl) && (
+        {(isGrammar || isSentence || card.exampleSentence || card.sourceUrl || card.imageUrl || card.audioUrl) && (
           <button
             onClick={() => setShowDetails(true)}
             className="text-xs text-ink-500 hover:text-ink-900 px-3 py-1.5 rounded-lg hover:bg-card transition cursor-pointer"

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { CardTypeBadge } from "./CardTypeBadge";
 import { AudioButton } from "@/components/common/AudioButton";
+import { NativeAudioButton } from "@/components/common/NativeAudioButton";
 import { PitchAccent } from "@/components/common/PitchAccent";
 import type { Card } from "@/types/card.types";
 
@@ -151,6 +152,12 @@ export function CardDetailsModal({ card, onClose }: Props) {
                 alt=""
                 className="max-h-48 rounded-lg border border-line object-contain"
               />
+            </Field>
+          )}
+
+          {card.audioUrl && (
+            <Field label="Native audio">
+              <NativeAudioButton src={card.audioUrl} />
             </Field>
           )}
 

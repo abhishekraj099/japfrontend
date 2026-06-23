@@ -2,6 +2,7 @@ import { useEffect, useCallback } from "react";
 import { RatingButtons } from "./RatingButtons";
 import { CardTypeBadge } from "@/features/cards/components/CardTypeBadge";
 import { AudioButton } from "@/components/common/AudioButton";
+import { NativeAudioButton } from "@/components/common/NativeAudioButton";
 import { PitchAccent } from "@/components/common/PitchAccent";
 import type { DueCard } from "@/types/review.types";
 
@@ -109,6 +110,12 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onHide, onRat
               alt=""
               className="mx-auto mt-4 max-h-40 rounded-lg border border-line object-contain"
             />
+          )}
+
+          {card.audioUrl && (
+            <div className="mt-3">
+              <NativeAudioButton src={card.audioUrl} />
+            </div>
           )}
 
           {isSentence && card.reading && (

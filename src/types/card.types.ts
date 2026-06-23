@@ -27,6 +27,7 @@ export interface Card {
   pageTitle: string | null;
   extractionSource: string | null;
   imageUrl: string | null;
+  audioUrl: string | null;
   deckId: string;
   createdAt: string;
   updatedAt: string;
@@ -52,6 +53,7 @@ export interface CreateCardInput {
   pageTitle?: string;
   extractionSource?: string;
   imageUrl?: string;
+  audioUrl?: string;
 }
 
 export interface UpdateCardInput {
