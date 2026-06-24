@@ -5,6 +5,7 @@ import { useDecks } from "@/features/decks/hooks/useDecks";
 import { DeckList } from "@/features/decks/components/DeckList";
 import { CreateDeckForm } from "@/features/decks/components/CreateDeckForm";
 import { useDueCards } from "@/features/reviews/hooks/useDueCards";
+import { MissionsSection } from "@/features/missions/components/MissionsSection";
 import { useAuthContext } from "@/providers/AuthProvider";
 import { ROUTES } from "@/constants/routes";
 import { Mascot, Onigiri, Lantern, Torii, KStar } from "@/components/common/Kawaii";
@@ -157,6 +158,11 @@ export function DashboardPage() {
             </Link>
           </div>
         </div>
+      </Reveal>
+
+      {/* ── Today's Missions (Phase 41) ── */}
+      <Reveal delay={60}>
+        <MissionsSection />
       </Reveal>
 
       {/* ── Today: kanji + proverb (refined) ── */}
