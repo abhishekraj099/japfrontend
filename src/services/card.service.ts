@@ -16,4 +16,5 @@ export const cardService = {
 
   delete: (id: string) =>
     api.delete(`/cards/${id}`).then((r) => r.data),
+  reset: (id: string) => api.post(`/cards/${id}/reset`).then((r) => r.data),
 };
