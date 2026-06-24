@@ -9,4 +9,5 @@ export const QUERY_KEYS = {
   INTEGRATIONS: ["integrations"] as const,
   ANALYTICS: ["analytics"] as const,
   COVERAGE: ["coverage"] as const,
+  GRAMMAR_LIBRARY: ["grammar", "library"] as const,
 };

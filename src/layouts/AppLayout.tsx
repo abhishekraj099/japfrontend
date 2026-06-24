@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { Layers, GraduationCap, BookOpen, BarChart3, Gauge, Settings, ChevronRight } from "lucide-react";
+import { Layers, GraduationCap, BookOpen, BarChart3, Gauge, BookMarked, Settings, ChevronRight } from "lucide-react";
 import { useAuthContext } from "@/providers/AuthProvider";
 import { ROUTES } from "@/constants/routes";
 import { AppAmbience } from "@/components/common/AppAmbience";
@@ -10,6 +10,7 @@ const NAV = [
   { to: ROUTES.REVIEW, label: "Review", jp: "復習", icon: GraduationCap },
   { to: ROUTES.ANALYTICS, label: "Analytics", jp: "統計", icon: BarChart3 },
   { to: ROUTES.COVERAGE, label: "Coverage", jp: "網羅", icon: Gauge },
+  { to: ROUTES.GRAMMAR, label: "Grammar", jp: "文法", icon: BookMarked },
   { to: ROUTES.DICTIONARY, label: "Dictionary", jp: "辞書", icon: BookOpen },
   { to: ROUTES.INTEGRATIONS, label: "Settings", jp: "設定", icon: Settings },
 ];
