@@ -10,6 +10,7 @@ export const ROUTES = {
   DECK: (id: string) => `/decks/${id}`,
   REVIEW: "/review",
   ANALYTICS: "/analytics",
+  COVERAGE: "/coverage",
   DICTIONARY: "/dictionary",
   ACCOUNT: "/account",
   INTEGRATIONS: "/settings/integrations",

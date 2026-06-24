@@ -9,6 +9,7 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { DeckDetailPage } from "@/pages/DeckDetailPage";
 import { ReviewPage } from "@/pages/ReviewPage";
 import { AnalyticsPage } from "@/pages/AnalyticsPage";
+import { CoveragePage } from "@/pages/CoveragePage";
 import { DictionaryPage } from "@/pages/DictionaryPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { OnboardingPage, ONBOARDED_KEY } from "@/pages/OnboardingPage";
@@ -72,6 +73,7 @@ export const router = createBrowserRouter([
           { path: "/decks/:deckId", element: <DeckDetailPage /> },
           { path: ROUTES.REVIEW, element: <ReviewPage /> },
           { path: ROUTES.ANALYTICS, element: <AnalyticsPage /> },
+          { path: ROUTES.COVERAGE, element: <CoveragePage /> },
           { path: ROUTES.DICTIONARY, element: <DictionaryPage /> },
           { path: ROUTES.ACCOUNT, element: <AccountPage /> },
           { path: ROUTES.INTEGRATIONS, element: <IntegrationsPage /> },

@@ -8,4 +8,5 @@ export const QUERY_KEYS = {
   DICTIONARY: (q: string) => ["dictionary", q] as const,
   INTEGRATIONS: ["integrations"] as const,
   ANALYTICS: ["analytics"] as const,
+  COVERAGE: ["coverage"] as const,
 };
