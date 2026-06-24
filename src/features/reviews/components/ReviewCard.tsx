@@ -3,6 +3,7 @@ import { RatingButtons } from "./RatingButtons";
 import { CardTypeBadge } from "@/features/cards/components/CardTypeBadge";
 import { templateRegistry } from "@/features/templates/registry";
 import { TemplateRenderer } from "@/features/templates/TemplateRenderer";
+import { ContextPanel } from "./ContextPanel";
 import type { DueCard } from "@/types/review.types";
 
 interface Props {
@@ -87,6 +88,8 @@ export function ReviewCard({ card, revealed, submitting, onReveal, onHide, onRat
             </button>
           </div>
           <TemplateRenderer template={template} card={card} face="back" />
+          {/* Rich context (Phase 48) — computed lazily only when revealed. */}
+          {revealed && <ContextPanel card={card} />}
         </div>
       </div>
 
