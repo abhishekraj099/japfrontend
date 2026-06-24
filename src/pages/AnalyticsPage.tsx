@@ -1,4 +1,5 @@
 import { AnalyticsDashboard } from "@/features/analytics/components/AnalyticsDashboard";
+import { WeakPoints } from "@/features/analytics/components/WeakPoints";
 
 export function AnalyticsPage() {
   return (
@@ -8,6 +9,10 @@ export function AnalyticsPage() {
         <p className="mt-1 text-sm text-ink-400">Your study progress, retention, and vocabulary growth.</p>
       </header>
       <AnalyticsDashboard />
+      <section className="mt-10">
+        <h2 className="mb-4 text-xl font-bold text-ink-900">Weak Points</h2>
+        <WeakPoints />
+      </section>
     </div>
   );
 }
