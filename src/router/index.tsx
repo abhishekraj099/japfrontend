@@ -11,6 +11,7 @@ import { ReviewPage } from "@/pages/ReviewPage";
 import { AnalyticsPage } from "@/pages/AnalyticsPage";
 import { CoveragePage } from "@/pages/CoveragePage";
 import { GrammarLibraryPage } from "@/pages/GrammarLibraryPage";
+import { GrammarMasteryPage } from "@/pages/GrammarMasteryPage";
 import { DictionaryPage } from "@/pages/DictionaryPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { OnboardingPage, ONBOARDED_KEY } from "@/pages/OnboardingPage";
@@ -76,6 +77,7 @@ export const router = createBrowserRouter([
           { path: ROUTES.ANALYTICS, element: <AnalyticsPage /> },
           { path: ROUTES.COVERAGE, element: <CoveragePage /> },
           { path: ROUTES.GRAMMAR, element: <GrammarLibraryPage /> },
+          { path: ROUTES.GRAMMAR_MASTERY, element: <GrammarMasteryPage /> },
           { path: ROUTES.DICTIONARY, element: <DictionaryPage /> },
           { path: ROUTES.ACCOUNT, element: <AccountPage /> },
           { path: ROUTES.INTEGRATIONS, element: <IntegrationsPage /> },

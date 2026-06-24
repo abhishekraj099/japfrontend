@@ -11,6 +11,7 @@ export const QUERY_KEYS = {
   ANALYTICS: ["analytics"] as const,
   COVERAGE: ["coverage"] as const,
   GRAMMAR_LIBRARY: ["grammar", "library"] as const,
+  GRAMMAR_MASTERY: ["grammar", "mastery"] as const,
   WEAK_POINTS: ["analytics", "weak-points"] as const,
   MISSIONS: ["missions", "today"] as const,
   ACHIEVEMENTS: ["achievements"] as const,

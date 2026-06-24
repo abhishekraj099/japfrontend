@@ -12,6 +12,7 @@ export const ROUTES = {
   ANALYTICS: "/analytics",
   COVERAGE: "/coverage",
   GRAMMAR: "/grammar",
+  GRAMMAR_MASTERY: "/grammar/mastery",
   DICTIONARY: "/dictionary",
   ACCOUNT: "/account",
   INTEGRATIONS: "/settings/integrations",
