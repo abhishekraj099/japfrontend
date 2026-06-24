@@ -10,6 +10,7 @@ import { DeckDetailPage } from "@/pages/DeckDetailPage";
 import { ReviewPage } from "@/pages/ReviewPage";
 import { AnalyticsPage } from "@/pages/AnalyticsPage";
 import { CoveragePage } from "@/pages/CoveragePage";
+import { JlptPage } from "@/pages/JlptPage";
 import { GrammarLibraryPage } from "@/pages/GrammarLibraryPage";
 import { GrammarMasteryPage } from "@/pages/GrammarMasteryPage";
 import { DictionaryPage } from "@/pages/DictionaryPage";
@@ -75,6 +76,7 @@ export const router = createBrowserRouter([
           { path: "/decks/:deckId", element: <DeckDetailPage /> },
           { path: ROUTES.REVIEW, element: <ReviewPage /> },
           { path: ROUTES.ANALYTICS, element: <AnalyticsPage /> },
+          { path: ROUTES.JLPT, element: <JlptPage /> },
           { path: ROUTES.COVERAGE, element: <CoveragePage /> },
           { path: ROUTES.GRAMMAR, element: <GrammarLibraryPage /> },
           { path: ROUTES.GRAMMAR_MASTERY, element: <GrammarMasteryPage /> },

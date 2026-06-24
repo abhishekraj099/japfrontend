@@ -16,4 +16,5 @@ export const QUERY_KEYS = {
   MISSIONS: ["missions", "today"] as const,
   ACHIEVEMENTS: ["achievements"] as const,
   ROADMAP: ["roadmap"] as const,
+  JLPT: ["jlpt"] as const,
 };
