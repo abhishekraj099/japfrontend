@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDueCards } from "@/features/reviews/hooks/useDueCards";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDueCards, useFocusCards } from "@/features/reviews/hooks/useDueCards";
 import { useSubmitReview } from "@/features/reviews/hooks/useSubmitReview";
 import { ReviewCard } from "@/features/reviews/components/ReviewCard";
 import { ReviewProgress } from "@/features/reviews/components/ReviewProgress";
@@ -11,9 +11,31 @@ import { BouncyMascot } from "@/components/common/BouncyMascot";
 
 type SessionState = "loading" | "error" | "empty" | "reviewing" | "complete";
 
+const FOCUS_LABELS: Record<string, string> = {
+  "weak-grammar": "Weak Grammar",
+  "weak-vocab": "Weak Vocabulary",
+  "top-failures": "Top Failures",
+  jlpt: "JLPT",
+  frequency: "Frequency",
+};
+
 export function ReviewPage() {
   const navigate = useNavigate();
-  const { data: dueCards, isLoading, isError, refetch } = useDueCards();
+  const [searchParams] = useSearchParams();
+  // Focus Review Sessions (Phase 40): switch the card source by URL param;
+  // the review flow below is otherwise identical.
+  const focus = searchParams.get("focus");
+  const focusLabel = focus
+    ? `${FOCUS_LABELS[focus] ?? "Focus"}${searchParams.get("jlpt") ? ` ${searchParams.get("jlpt")}` : ""}${
+        searchParams.get("band") ? ` ${searchParams.get("band")}` : ""
+      }`
+    : null;
+  const dueQuery = useDueCards({ enabled: !focus });
+  const focusQuery = useFocusCards(
+    { type: focus ?? "", jlpt: searchParams.get("jlpt") ?? undefined, band: searchParams.get("band") ?? undefined },
+    !!focus
+  );
+  const { data: dueCards, isLoading, isError, refetch } = focus ? focusQuery : dueQuery;
   const { mutate: submitReview, isPending: submitting } = useSubmitReview();
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -187,7 +209,7 @@ export function ReviewPage() {
         </button>
         <span className="flex items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-ink-400 ring-1 ring-white/10">
           <span className="font-jp text-sakura-500">復習</span>
-          {submitting ? "Saving…" : "Review Session"}
+          {submitting ? "Saving…" : focusLabel ? `Focus · ${focusLabel}` : "Review Session"}
         </span>
       </div>
 

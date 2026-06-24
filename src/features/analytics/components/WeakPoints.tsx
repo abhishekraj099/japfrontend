@@ -1,8 +1,20 @@
+import { Link } from "react-router-dom";
 import { useWeakPoints } from "../hooks/useWeakPoints";
 import type { WeakItem, JlptWeakRow, FreqWeakRow } from "@/types/weakpoint.types";
 
 function fmt(p: number | null) {
   return p == null ? "—" : `${p}%`;
+}
+
+function FocusButton({ to, children }: { to: string; children: React.ReactNode }) {
+  return (
+    <Link
+      to={to}
+      className="inline-flex items-center rounded-lg bg-indigo-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-indigo-600"
+    >
+      ▶ {children}
+    </Link>
+  );
 }
 
 function TargetRow({ it }: { it: WeakItem }) {
@@ -40,12 +52,22 @@ export function WeakPoints() {
             </li>
           ))}
         </ul>
+        <div className="flex flex-wrap gap-2 pt-1">
+          <FocusButton to="/review?focus=weak-vocab">Review Weak Vocabulary</FocusButton>
+          <FocusButton to="/review?focus=weak-grammar">Review Weak Grammar</FocusButton>
+          <FocusButton to="/review?focus=top-failures">Review Top Failures</FocusButton>
+          {rec.weakestJlpt && <FocusButton to={`/review?focus=jlpt&jlpt=${rec.weakestJlpt.level}`}>Review {rec.weakestJlpt.level}</FocusButton>}
+          <FocusButton to="/review?focus=frequency&band=top1k">Review Top 1000</FocusButton>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Top review targets */}
         <div className="paper-card px-5 py-4">
-          <h3 className="section-label mb-2">Top Review Targets</h3>
+          <div className="mb-2 flex items-center justify-between">
+            <h3 className="section-label">Top Review Targets</h3>
+            {rec.topReviewTargets.length > 0 && <FocusButton to="/review?focus=top-failures">Review</FocusButton>}
+          </div>
           {rec.topReviewTargets.length ? (
             rec.topReviewTargets.map((it) => <TargetRow key={it.id} it={it} />)
           ) : (
@@ -107,7 +129,10 @@ export function WeakPoints() {
 
         {/* Weakest grammar */}
         <div className="paper-card px-5 py-4">
-          <h3 className="section-label mb-2">Weakest Grammar</h3>
+          <div className="mb-2 flex items-center justify-between">
+            <h3 className="section-label">Weakest Grammar</h3>
+            {data.grammar.mostFailed.length > 0 && <FocusButton to="/review?focus=weak-grammar">Review</FocusButton>}
+          </div>
           {data.grammar.mostFailed.length ? (
             data.grammar.mostFailed.map((it) => <TargetRow key={it.id} it={{ ...it, cardType: "grammar" }} />)
           ) : (
