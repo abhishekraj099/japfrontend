@@ -9,6 +9,7 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
   DECK: (id: string) => `/decks/${id}`,
   REVIEW: "/review",
+  ANALYTICS: "/analytics",
   DICTIONARY: "/dictionary",
   ACCOUNT: "/account",
   INTEGRATIONS: "/settings/integrations",

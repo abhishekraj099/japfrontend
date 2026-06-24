@@ -7,4 +7,5 @@ export const QUERY_KEYS = {
   REVIEWS: ["reviews"] as const,
   DICTIONARY: (q: string) => ["dictionary", q] as const,
   INTEGRATIONS: ["integrations"] as const,
+  ANALYTICS: ["analytics"] as const,
 };
