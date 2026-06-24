@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useDeck } from "@/features/decks/hooks/useDeck";
 import { useCards } from "@/features/cards/hooks/useCards";
 import { CardList } from "@/features/cards/components/CardList";
+import { DeckIntelligencePanel } from "@/features/decks/components/DeckIntelligencePanel";
 import { CreateCardForm } from "@/features/cards/components/CreateCardForm";
 import { exportDeckToAnki } from "@/features/cards/utils/ankiExport";
 import { ROUTES } from "@/constants/routes";
@@ -154,6 +155,9 @@ export function DeckDetailPage() {
           />
         </div>
       )}
+
+      {/* Deck Intelligence (Phase 51) */}
+      {deckId && <DeckIntelligencePanel deckId={deckId} />}
 
       {/* Card states */}
       {cardsLoading && <CardListSkeleton />}

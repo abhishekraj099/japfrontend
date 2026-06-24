@@ -1,5 +1,6 @@
 import { api } from "@/lib/axios";
 import type { Deck, CreateDeckInput, UpdateDeckInput } from "@/types/deck.types";
+import type { DeckIntelligence } from "@/types/deckIntelligence.types";
 
 export const deckService = {
   getAll: () => api.get<Deck[]>("/decks").then((r) => r.data),
@@ -13,4 +14,7 @@ export const deckService = {
     api.patch<Deck>(`/decks/${id}`, data).then((r) => r.data),
 
   delete: (id: string) => api.delete(`/decks/${id}`).then((r) => r.data),
+
+  getIntelligence: (id: string) =>
+    api.get<DeckIntelligence>(`/decks/${id}/intelligence`).then((r) => r.data),
 };
