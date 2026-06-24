@@ -6,6 +6,7 @@ import { DeckList } from "@/features/decks/components/DeckList";
 import { CreateDeckForm } from "@/features/decks/components/CreateDeckForm";
 import { useDueCards } from "@/features/reviews/hooks/useDueCards";
 import { MissionsSection } from "@/features/missions/components/MissionsSection";
+import { TodayPlan } from "@/features/planner/components/TodayPlan";
 import { AchievementsSection } from "@/features/achievements/components/AchievementsSection";
 import { RoadmapSection } from "@/features/roadmap/components/RoadmapSection";
 import { useAuthContext } from "@/providers/AuthProvider";
@@ -160,6 +161,11 @@ export function DashboardPage() {
             </Link>
           </div>
         </div>
+      </Reveal>
+
+      {/* ── Today's Plan (Phase 53) ── */}
+      <Reveal delay={50}>
+        <TodayPlan />
       </Reveal>
 
       {/* ── Today's Missions (Phase 41) ── */}
