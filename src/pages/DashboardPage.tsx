@@ -7,6 +7,7 @@ import { CreateDeckForm } from "@/features/decks/components/CreateDeckForm";
 import { useDueCards } from "@/features/reviews/hooks/useDueCards";
 import { MissionsSection } from "@/features/missions/components/MissionsSection";
 import { AchievementsSection } from "@/features/achievements/components/AchievementsSection";
+import { RoadmapSection } from "@/features/roadmap/components/RoadmapSection";
 import { useAuthContext } from "@/providers/AuthProvider";
 import { ROUTES } from "@/constants/routes";
 import { Mascot, Onigiri, Lantern, Torii, KStar } from "@/components/common/Kawaii";
@@ -169,6 +170,11 @@ export function DashboardPage() {
       {/* ── Achievements (Phase 42) ── */}
       <Reveal delay={70}>
         <AchievementsSection />
+      </Reveal>
+
+      {/* ── Learning Roadmap (Phase 43) ── */}
+      <Reveal delay={80}>
+        <RoadmapSection />
       </Reveal>
 
       {/* ── Today: kanji + proverb (refined) ── */}

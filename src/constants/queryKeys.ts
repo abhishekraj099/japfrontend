@@ -14,4 +14,5 @@ export const QUERY_KEYS = {
   WEAK_POINTS: ["analytics", "weak-points"] as const,
   MISSIONS: ["missions", "today"] as const,
   ACHIEVEMENTS: ["achievements"] as const,
+  ROADMAP: ["roadmap"] as const,
 };
