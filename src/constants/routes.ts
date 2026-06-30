@@ -17,4 +17,5 @@ export const ROUTES = {
   DICTIONARY: "/dictionary",
   ACCOUNT: "/account",
   INTEGRATIONS: "/settings/integrations",
+  SETUP: "/setup",
 } as const;

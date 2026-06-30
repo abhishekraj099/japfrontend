@@ -18,6 +18,7 @@ import { NotFoundPage } from "@/pages/NotFoundPage";
 import { OnboardingPage, ONBOARDED_KEY } from "@/pages/OnboardingPage";
 import { IntegrationsPage } from "@/pages/IntegrationsPage";
 import { AccountPage } from "@/pages/AccountPage";
+import { SetupPage } from "@/pages/SetupPage";
 import { LandingPage } from "@/pages/LandingPage";
 import { PricingPage } from "@/pages/PricingPage";
 import { DownloadPage } from "@/pages/DownloadPage";
@@ -69,6 +70,8 @@ export const router = createBrowserRouter([
   {
     element: <ProtectedRoute />,
     children: [
+      // Full-screen setup — no AppLayout wrapper
+      { path: ROUTES.SETUP, element: <SetupPage /> },
       {
         element: <AppLayout />,
         children: [
