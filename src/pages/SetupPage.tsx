@@ -1,15 +1,12 @@
 /**
  * RC5.1 — Website Guided Setup Page
+ * RC5.2 — Real dictionary download progress from extension
  *
  * Flow: Language → Learning Path → Pin Extension → Install → Done
  *
  * Communicates with the JAP Chrome extension via a window.postMessage bridge
  * (content script relays to background service worker). If the extension is
  * not installed or not responding the install step degrades gracefully.
- *
- * Persistence:
- *  - Website: localStorage "jap_web_setup_complete"
- *  - Extension: chrome.storage.local "jap_setup_state" (written by background)
  */
 
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -24,24 +21,36 @@ export const WEB_SETUP_COMPLETE_KEY = "jap_web_setup_complete";
 type StepId = "language" | "path" | "pin" | "install" | "done";
 type LearningPath = "beginner" | "intermediate" | "advanced";
 
-interface InstallTask {
-  id: string;
-  label: string;
-  status: "pending" | "running" | "done" | "warn";
+// Mirrors ResourceProgress from ResourceInstaller.ts (extension)
+interface ResourceProgress {
+  type: "JAP_INSTALL_PROGRESS";
+  resourceId: string;
+  resourceLabel: string;
+  status: "pending" | "skipped" | "downloading" | "installing" | "done" | "failed";
+  percent: number;
+  bytesLoaded: number;
+  bytesTotal: number;
+  speedBps: number;
+  resourceIndex: number;
+  resourceTotal: number;
+  error?: string;
+  allDone: boolean;
 }
 
-const STEPS: StepId[] = ["language", "path", "pin", "install", "done"];
-const TOTAL_VISIBLE = 4; // steps shown in progress dots (done is end state)
+interface ResourceState extends Omit<ResourceProgress, "type" | "allDone"> {
+  id: string;
+}
 
-const INITIAL_TASKS: InstallTask[] = [
-  { id: "workspace", label: "Creating your workspace",         status: "pending" },
-  { id: "prefs",     label: "Saving your preferences",         status: "pending" },
-  { id: "ext",       label: "Syncing with JAP Extension",      status: "pending" },
-  { id: "settings",  label: "Applying learning settings",      status: "pending" },
-  { id: "furigana",  label: "Enabling furigana reading aids",  status: "pending" },
-  { id: "recs",      label: "Configuring recommendations",     status: "pending" },
-  { id: "finish",    label: "Finishing up",                    status: "pending" },
+// Default resources list — mirrors public/resources.json in extension
+const DEFAULT_RESOURCES: ResourceState[] = [
+  { id: "jmdict-english",   resourceId: "jmdict-english",   resourceLabel: "Default Dictionary",  status: "pending", percent: 0, bytesLoaded: 0, bytesTotal: 70 * 1024 * 1024, speedBps: 0, resourceIndex: 1, resourceTotal: 4 },
+  { id: "kanjidic2-english",resourceId: "kanjidic2-english",resourceLabel: "Kanji Database",       status: "pending", percent: 0, bytesLoaded: 0, bytesTotal: 4 * 1024 * 1024,  speedBps: 0, resourceIndex: 2, resourceTotal: 4 },
+  { id: "jpdb-frequency",   resourceId: "jpdb-frequency",   resourceLabel: "Frequency List",       status: "pending", percent: 0, bytesLoaded: 0, bytesTotal: 5 * 1024 * 1024,  speedBps: 0, resourceIndex: 3, resourceTotal: 4 },
+  { id: "kanjium-pitch",    resourceId: "kanjium-pitch",    resourceLabel: "Pitch Accent",         status: "pending", percent: 0, bytesLoaded: 0, bytesTotal: 3 * 1024 * 1024,  speedBps: 0, resourceIndex: 4, resourceTotal: 4 },
 ];
+
+const STEPS: StepId[] = ["language", "path", "pin", "install", "done"];
+const TOTAL_VISIBLE = 4;
 
 // ── Extension bridge ──────────────────────────────────────────────────────────
 
@@ -75,19 +84,30 @@ function sendToExtension(
   });
 }
 
-const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function formatBytes(b: number): string {
+  if (b < 1024 * 1024) return `${(b / 1024).toFixed(0)} KB`;
+  return `${(b / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function formatSpeed(bps: number): string {
+  if (bps < 1024 * 1024) return `${(bps / 1024).toFixed(0)} KB/s`;
+  return `${(bps / (1024 * 1024)).toFixed(1)} MB/s`;
+}
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function SetupPage() {
-  const navigate    = useNavigate();
+  const navigate        = useNavigate();
   const { user, token } = useAuthContext();
 
-  const [step, setStep]               = useState<StepId>("language");
-  const [path, setPath]               = useState<LearningPath | null>(null);
-  const [tasks, setTasks]             = useState<InstallTask[]>(INITIAL_TASKS);
-  const [extId, setExtId]             = useState<string | null>(null);
-  const [extWarn, setExtWarn]         = useState(false);
+  const [step, setStep]         = useState<StepId>("language");
+  const [path, setPath]         = useState<LearningPath | null>(null);
+  const [extId, setExtId]       = useState<string | null>(null);
+  const [extWarn, setExtWarn]   = useState(false);
+  const [resources, setResources] = useState<ResourceState[]>(DEFAULT_RESOURCES);
+  const [installDone, setInstallDone] = useState(false);
   const installRan = useRef(false);
 
   // Already set up → jump to dashboard
@@ -97,31 +117,49 @@ export function SetupPage() {
     }
   }, [navigate]);
 
-  const updateTask = useCallback((id: string, status: InstallTask["status"]) => {
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, status } : t)));
-  }, []);
+  // ── Listen for install progress events from extension ────────────────────
+  useEffect(() => {
+    if (step !== "install") return;
 
-  // ── Install sequence (runs once when step = "install") ───────────────────
-  const runInstall = useCallback(async () => {
-    // 1. Workspace
-    updateTask("workspace", "running");
-    await sleep(500);
-    localStorage.setItem(
-      "jap_setup_profile",
-      JSON.stringify({ language: "ja", learningPath: path, completedAt: Date.now() }),
-    );
-    updateTask("workspace", "done");
+    const handler = (e: MessageEvent) => {
+      if (e.source !== window) return;
+      if (e.data?.source !== "jap_ext_reply") return;
+      if (e.data?.type !== "JAP_INSTALL_PROGRESS") return;
 
-    // 2. Prefs
-    updateTask("prefs", "running");
-    await sleep(400);
-    updateTask("prefs", "done");
+      const p = e.data as ResourceProgress;
+      setResources((prev) =>
+        prev.map((r) =>
+          r.resourceId === p.resourceId
+            ? {
+                ...r,
+                status: p.status,
+                percent: p.percent,
+                bytesLoaded: p.bytesLoaded,
+                bytesTotal: p.bytesTotal,
+                speedBps: p.speedBps,
+                error: p.error,
+              }
+            : r,
+        ),
+      );
 
-    // 3. Extension sync
-    updateTask("ext", "running");
+      if (p.allDone) {
+        localStorage.setItem(WEB_SETUP_COMPLETE_KEY, "true");
+        setInstallDone(true);
+        setTimeout(() => setStep("done"), 1200);
+      }
+    };
+
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, [step]);
+
+  // ── Initial setup (auth sync + setup complete + install start) ───────────
+  const runSetup = useCallback(async () => {
     let extOk = false;
+
+    // 1. Auth sync
     try {
-      // Auth sync — let extension know who is logged in
       if (token && user) {
         await sendToExtension(
           "JAP_AUTH_SYNC",
@@ -129,7 +167,7 @@ export function SetupPage() {
           3000,
         );
       }
-      // Setup complete — apply settings in extension
+      // 2. Setup complete (stores settings, returns extId)
       const resp = await sendToExtension(
         "JAP_SETUP_COMPLETE",
         { language: "ja", learningPath: path ?? "beginner", goals: [] },
@@ -137,46 +175,54 @@ export function SetupPage() {
       );
       if (resp.extId) setExtId(String(resp.extId));
       extOk = true;
-      updateTask("ext", "done");
     } catch {
       setExtWarn(true);
-      updateTask("ext", "warn");
     }
 
-    // 4–6. Remaining steps (instant if extension did them; simulate otherwise)
-    updateTask("settings", "running");
-    await sleep(extOk ? 200 : 350);
-    updateTask("settings", "done");
+    // 3. Kick off real dictionary install (fire-and-forget via the extension)
+    if (extOk) {
+      try {
+        await sendToExtension("JAP_INSTALL_START", {}, 5000);
+      } catch {
+        // Extension didn't acknowledge the start — surface the warning
+        setExtWarn(true);
+      }
+    }
 
-    updateTask("furigana", "running");
-    await sleep(200);
-    updateTask("furigana", "done");
-
-    updateTask("recs", "running");
-    await sleep(200);
-    updateTask("recs", "done");
-
-    // 7. Finish
-    updateTask("finish", "running");
-    await sleep(350);
-    updateTask("finish", "done");
-
-    localStorage.setItem(WEB_SETUP_COMPLETE_KEY, "true");
-    await sleep(600);
-    setStep("done");
-  }, [path, token, user, updateTask]);
+    // If extension is unavailable, still let user continue after showing warning
+    if (!extOk) {
+      localStorage.setItem(WEB_SETUP_COMPLETE_KEY, "true");
+    }
+  }, [path, token, user]);
 
   useEffect(() => {
     if (step === "install" && !installRan.current) {
       installRan.current = true;
-      void runInstall();
+      void runSetup();
     }
-  }, [step, runInstall]);
+  }, [step, runSetup]);
 
-  // ── Step index for progress dots ─────────────────────────────────────────
+  const handleSkipInstall = useCallback(() => {
+    // Cancel any in-progress install and proceed
+    void sendToExtension("JAP_INSTALL_CANCEL", {}, 2000).catch(() => {});
+    localStorage.setItem(WEB_SETUP_COMPLETE_KEY, "true");
+    setStep("done");
+  }, []);
+
+  const handleRetryInstall = useCallback(async () => {
+    // Reset resource states to pending
+    setResources(DEFAULT_RESOURCES);
+    try {
+      await sendToExtension("JAP_INSTALL_CANCEL", {}, 2000);
+      await sendToExtension("JAP_INSTALL_START", {}, 5000);
+    } catch {
+      setExtWarn(true);
+    }
+  }, []);
+
   const stepIndex = STEPS.indexOf(step);
+  const anyFailed = resources.some((r) => r.status === "failed");
 
-  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f1024] via-[#1a1b3c] to-[#0d1117] flex flex-col items-center justify-center px-4 py-8">
       {/* Header */}
@@ -210,25 +256,22 @@ export function SetupPage() {
         )}
 
         <div className="px-8 pb-8 pt-4">
-          {step === "language" && (
-            <StepLanguage onNext={() => setStep("path")} />
-          )}
+          {step === "language" && <StepLanguage onNext={() => setStep("path")} />}
           {step === "path" && (
-            <StepPath
-              selected={path}
-              onSelect={setPath}
-              onNext={() => setStep("pin")}
+            <StepPath selected={path} onSelect={setPath} onNext={() => setStep("pin")} />
+          )}
+          {step === "pin" && <StepPin onNext={() => setStep("install")} />}
+          {step === "install" && (
+            <StepInstall
+              resources={resources}
+              extWarn={extWarn}
+              allDone={installDone}
+              anyFailed={anyFailed}
+              onSkip={handleSkipInstall}
+              onRetry={() => void handleRetryInstall()}
             />
           )}
-          {step === "pin" && (
-            <StepPin onNext={() => setStep("install")} />
-          )}
-          {step === "install" && (
-            <StepInstall tasks={tasks} extWarn={extWarn} />
-          )}
-          {step === "done" && (
-            <StepDone extId={extId} />
-          )}
+          {step === "done" && <StepDone extId={extId} />}
         </div>
       </div>
 
@@ -269,9 +312,7 @@ function StepLanguage({ onNext }: { onNext: () => void }) {
         <span className="ml-auto text-indigo-400">✓</span>
       </button>
 
-      <p className="text-xs text-slate-600 text-center">
-        More languages coming soon
-      </p>
+      <p className="text-xs text-slate-600 text-center">More languages coming soon</p>
 
       <button
         onClick={onNext}
@@ -286,7 +327,7 @@ function StepLanguage({ onNext }: { onNext: () => void }) {
 // ── Step: Learning Path ────────────────────────────────────────────────────────
 
 const PATH_OPTIONS: { id: LearningPath; label: string; sub: string; icon: string }[] = [
-  { id: "beginner",     icon: "🌱", label: "Complete beginner",    sub: "Never studied Japanese before" },
+  { id: "beginner",     icon: "🌱", label: "Complete beginner",     sub: "Never studied Japanese before" },
   { id: "intermediate", icon: "📚", label: "Intermediate learner",  sub: "Know some vocab and grammar" },
   { id: "advanced",     icon: "⚡", label: "Advanced / near-native", sub: "Looking to fine-tune and mine content" },
 ];
@@ -330,9 +371,7 @@ function StepPath({
               <div className="font-semibold text-sm">{opt.label}</div>
               <div className="text-xs text-slate-500 mt-0.5">{opt.sub}</div>
             </div>
-            {selected === opt.id && (
-              <span className="text-indigo-400 text-lg">✓</span>
-            )}
+            {selected === opt.id && <span className="text-indigo-400 text-lg">✓</span>}
           </button>
         ))}
       </div>
@@ -365,14 +404,12 @@ function StepPin({ onNext }: { onNext: () => void }) {
         </p>
       </div>
 
-      {/* Visual instruction card */}
       <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-5 space-y-4">
         <PinStep n={1} icon="🧩" text="Click the puzzle piece icon in your Chrome toolbar" />
         <PinStep n={2} icon="🎌" text='Find "JAP — Japanese Learning" in the list' />
         <PinStep n={3} icon="📌" text="Click the pin icon to pin it to your toolbar" />
       </div>
 
-      {/* Toolbar mock */}
       <div className="flex items-center justify-end gap-1.5 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-2">
         <span className="text-slate-600 text-xs">Chrome toolbar preview</span>
         <div className="ml-auto flex items-center gap-1">
@@ -413,97 +450,181 @@ function PinStep({ n, icon, text }: { n: number; icon: string; text: string }) {
   );
 }
 
-// ── Step: Install ─────────────────────────────────────────────────────────────
+// ── Step: Install (RC5.2 — real progress) ─────────────────────────────────────
 
-function StepInstall({ tasks, extWarn }: { tasks: InstallTask[]; extWarn: boolean }) {
-  const done  = tasks.every((t) => t.status === "done" || t.status === "warn");
-  const pct   = Math.round(
-    (tasks.filter((t) => t.status === "done" || t.status === "warn").length / tasks.length) * 100,
+function StepInstall({
+  resources,
+  extWarn,
+  allDone,
+  anyFailed,
+  onSkip,
+  onRetry,
+}: {
+  resources: ResourceState[];
+  extWarn: boolean;
+  allDone: boolean;
+  anyFailed: boolean;
+  onSkip: () => void;
+  onRetry: () => void;
+}) {
+  const activeResource = resources.find(
+    (r) => r.status === "downloading" || r.status === "installing",
   );
+  const doneCount = resources.filter((r) => r.status === "done" || r.status === "skipped").length;
+  const overallPct = allDone
+    ? 100
+    : Math.round(
+        resources.reduce((sum, r) => sum + (r.status === "skipped" || r.status === "done" ? 100 : r.percent), 0) /
+          resources.length,
+      );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div>
         <p className="text-xs font-semibold text-indigo-400 uppercase tracking-widest mb-1">
           Step 4 of 4
         </p>
         <h2 className="text-2xl font-bold text-white leading-tight">
-          {done ? "Almost there!" : "Preparing your environment…"}
+          {allDone ? "Dictionaries ready!" : "Downloading dictionaries…"}
         </h2>
         <p className="text-slate-400 text-sm mt-1">
-          {done
-            ? "Everything is configured. One moment…"
-            : "Setting up your personalised Japanese learning workspace."}
+          {allDone
+            ? "All resources are installed. Taking you to the extension…"
+            : activeResource
+            ? `Installing ${activeResource.resourceLabel}`
+            : "Connecting to the JAP extension…"}
         </p>
       </div>
 
-      {/* Progress bar */}
+      {/* Overall bar */}
       <div>
-        <div className="flex justify-between text-xs text-slate-500 mb-1">
-          <span>Progress</span>
-          <span>{pct}%</span>
+        <div className="flex justify-between text-xs text-slate-500 mb-1.5">
+          <span>{doneCount} of {resources.length} resources</span>
+          <span>{overallPct}%</span>
         </div>
-        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400 rounded-full transition-all duration-500"
-            style={{ width: `${pct}%` }}
+            className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400 rounded-full transition-all duration-300"
+            style={{ width: `${overallPct}%` }}
           />
         </div>
       </div>
 
-      {/* Checklist */}
-      <div className="space-y-2">
-        {tasks.map((task) => (
-          <div key={task.id} className="flex items-center gap-3 py-1">
-            <TaskIcon status={task.status} />
-            <span
-              className={`text-sm transition-colors ${
-                task.status === "done"
-                  ? "text-slate-300"
-                  : task.status === "running"
-                  ? "text-white font-medium"
-                  : task.status === "warn"
-                  ? "text-amber-400"
-                  : "text-slate-600"
-              }`}
-            >
-              {task.label}
-            </span>
-          </div>
+      {/* Per-resource list */}
+      <div className="space-y-3">
+        {resources.map((r) => (
+          <ResourceRow
+            key={r.id}
+            resource={r}
+          />
         ))}
       </div>
 
       {/* Extension warning */}
       {extWarn && (
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-3 text-xs text-amber-300">
-          ⚠ JAP Extension not detected. Install the extension from the Chrome Web
-          Store, then reopen the extension popup to finish syncing.
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-3 text-xs text-amber-300 space-y-1">
+          <div>⚠ JAP Extension not detected or not responding.</div>
+          <div>
+            Install the extension from the Chrome Web Store, then return here to
+            continue. Dictionaries can also be imported manually via the extension
+            settings page.
+          </div>
         </div>
+      )}
+
+      {/* Action buttons */}
+      <div className="flex gap-2 pt-1">
+        {anyFailed && (
+          <button
+            onClick={onRetry}
+            className="flex-1 bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 text-xs font-semibold py-2.5 rounded-xl hover:bg-indigo-500/30 transition cursor-pointer"
+          >
+            ↺ Retry Failed
+          </button>
+        )}
+        {(extWarn || anyFailed) && (
+          <button
+            onClick={onSkip}
+            className="flex-1 bg-white/5 border border-white/10 text-slate-400 text-xs py-2.5 rounded-xl hover:bg-white/10 transition cursor-pointer"
+          >
+            Skip & Continue →
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ResourceRow({ resource }: { resource: ResourceState }) {
+  const { resourceLabel, status, percent, bytesLoaded, bytesTotal, speedBps, error } = resource;
+  const isActive = status === "downloading" || status === "installing";
+
+  return (
+    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 space-y-2">
+      <div className="flex items-center gap-3">
+        <ResourceStatusIcon status={status} />
+        <span
+          className={`text-sm flex-1 ${
+            status === "done" || status === "skipped"
+              ? "text-slate-400"
+              : isActive
+              ? "text-white font-medium"
+              : status === "failed"
+              ? "text-red-400"
+              : "text-slate-600"
+          }`}
+        >
+          {resourceLabel}
+          {status === "skipped" && (
+            <span className="ml-2 text-xs text-slate-600">already installed</span>
+          )}
+        </span>
+        {isActive && bytesTotal > 0 && (
+          <span className="text-xs text-slate-500 whitespace-nowrap">
+            {formatBytes(bytesLoaded)} / {formatBytes(bytesTotal)}
+            {speedBps > 0 && ` · ${formatSpeed(speedBps)}`}
+          </span>
+        )}
+      </div>
+
+      {isActive && (
+        <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all duration-200 ${
+              status === "installing"
+                ? "bg-gradient-to-r from-purple-500 to-indigo-400"
+                : "bg-gradient-to-r from-teal-500 to-indigo-400"
+            }`}
+            style={{ width: `${percent}%` }}
+          />
+        </div>
+      )}
+
+      {status === "failed" && error && (
+        <p className="text-xs text-red-400/80">{error}</p>
       )}
     </div>
   );
 }
 
-function TaskIcon({ status }: { status: InstallTask["status"] }) {
-  if (status === "done")
+function ResourceStatusIcon({ status }: { status: ResourceState["status"] }) {
+  if (status === "done" || status === "skipped")
     return (
-      <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xs flex-shrink-0">
+      <span className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-[10px] flex-shrink-0">
         ✓
       </span>
     );
-  if (status === "running")
+  if (status === "downloading" || status === "installing")
     return (
       <span className="w-5 h-5 rounded-full border-2 border-indigo-400 border-t-transparent animate-spin flex-shrink-0" />
     );
-  if (status === "warn")
+  if (status === "failed")
     return (
-      <span className="w-5 h-5 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-xs flex-shrink-0">
-        ⚠
+      <span className="w-5 h-5 rounded-full bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-400 text-[10px] flex-shrink-0">
+        ✕
       </span>
     );
-  return (
-    <span className="w-5 h-5 rounded-full border border-white/15 flex-shrink-0" />
-  );
+  return <span className="w-5 h-5 rounded-full border border-white/15 flex-shrink-0" />;
 }
 
 // ── Step: Done ────────────────────────────────────────────────────────────────
@@ -513,10 +634,8 @@ function StepDone({ extId }: { extId: string | null }) {
 
   const openExtension = () => {
     if (extId) {
-      // Open the extension popup.html as a tab — best we can do from a webpage
       window.open(`chrome-extension://${extId}/popup.html`, "_blank");
     } else {
-      // Fallback: guide user to click the toolbar icon
       alert(
         "Click the JAP 🎌 icon in your Chrome toolbar to open the extension.\n\n" +
           "If you don't see it, click the 🧩 puzzle icon and pin JAP first.",
@@ -526,22 +645,18 @@ function StepDone({ extId }: { extId: string | null }) {
 
   return (
     <div className="space-y-6 text-center">
-      {/* Illustration */}
       <div className="flex flex-col items-center gap-2 py-4">
         <div className="text-6xl mb-2 animate-bounce">🎌</div>
         <div className="w-20 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" />
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold text-white mb-1">
-          ✓ Everything is ready.
-        </h2>
+        <h2 className="text-2xl font-bold text-white mb-1">✓ Everything is ready.</h2>
         <p className="text-slate-400 text-sm">
           Your Japanese learning environment is set up. Time to start immersing!
         </p>
       </div>
 
-      {/* What's ready */}
       <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-4 text-left space-y-2">
         {[
           "Furigana reading aids enabled",
@@ -564,7 +679,6 @@ function StepDone({ extId }: { extId: string | null }) {
           🚀 Open JAP Extension
         </button>
 
-        {/* Toolbar hint */}
         <div className="flex items-center justify-center gap-2 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3">
           <span className="text-slate-400 text-xs">Or click</span>
           <span className="text-lg">🎌</span>
